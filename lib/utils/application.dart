@@ -27,6 +27,7 @@ class Application {
   WorkingSlotsList getWorkingSlotsList() {
     if (_workingSlotsList == null) {
       _workingSlotsList = WorkingSlotsList();
+      _workingSlotsList!.loadData();
     }
     return _workingSlotsList ?? WorkingSlotsList();
   }

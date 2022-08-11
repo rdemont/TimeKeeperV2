@@ -66,9 +66,9 @@ class _WorkingWeekWidget extends State<WorkingWeekWidget> {
     totMinutes += wsl.sumMinutes();
     Widget result = GestureDetector(
         onTap: () {
-          btnDailyVisible = false;
-          btnWeeklyVisible = true;
-          btnMonthlyVisible = true;
+          //btnDailyVisible = false;
+          //btnWeeklyVisible = true;
+          //btnMonthlyVisible = true;
 
           Application.instance.setCurrentDate(dt);
           Navigator.popAndPushNamed(context, '/daily');
@@ -155,54 +155,6 @@ class _WorkingWeekWidget extends State<WorkingWeekWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                    height: 80,
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    color: Colors.blue,
-                    child: Row(
-                      children: [
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.blue.shade900,
-                            shape: const BeveledRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              Application.instance
-                                  .setCurrentDate(DateTime.now());
-                              _changeDate(DateTime.now());
-                            });
-                          },
-                          child: const Text("Today",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white)),
-                        ),
-                        Container(
-                          width: 20,
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              height: 10,
-                            ),
-                            Text("Week $_weekNumber / $_yearNumber",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30,
-                                    color: Colors.white)),
-                            Text(_weekFromTo,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.white))
-                          ],
-                        )
-                      ],
-                    )),
                 Container(
                     height: MediaQuery.of(context).size.height - 115 - 80 - 60,
                     child: ListView.builder(

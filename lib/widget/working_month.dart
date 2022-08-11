@@ -103,9 +103,9 @@ class _WorkingMonthlyWidget extends State<WorkingMonthlyWidget> {
     return GestureDetector(
         onTap: () {
           Application.instance.setCurrentDate(dt);
-          btnDailyVisible = false;
-          btnWeeklyVisible = true;
-          btnMonthlyVisible = false;
+          //btnDailyVisible = false;
+          //btnWeeklyVisible = true;
+          //btnMonthlyVisible = false;
           Navigator.popAndPushNamed(context, '/weekly');
         },
         child: Container(
@@ -146,9 +146,9 @@ class _WorkingMonthlyWidget extends State<WorkingMonthlyWidget> {
     return GestureDetector(
         onTap: () {
           Application.instance.setCurrentDate(dt);
-          btnDailyVisible = false;
-          btnWeeklyVisible = true;
-          btnMonthlyVisible = true;
+          //btnDailyVisible = false;
+          //btnWeeklyVisible = true;
+          //btnMonthlyVisible = true;
           Navigator.popAndPushNamed(context, '/daily');
         },
         child: Container(

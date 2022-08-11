@@ -48,6 +48,22 @@ extension DateWeekExtensions on DateTime {
     return DateTime(year, month + 1, 0);
   }
 
+  DateTime get firstDayOfTheMonthView {
+    DateTime dtStart = firstDayOfTheMonth;
+    while (dtStart.weekday != DateTime.monday) {
+      dtStart = dtStart.add(Duration(days: -1));
+    }
+    return dtStart;
+  }
+
+  DateTime get lastDayOfTheMonthView {
+    DateTime dtEnd = lastDayOfTheMonth;
+    while (dtEnd.weekday != DateTime.sunday) {
+      dtEnd = dtEnd.add(Duration(days: 1));
+    }
+    return dtEnd;
+  }
+
   DateTime get firstDayOfTheWeek {
     return subtract(Duration(days: weekday - 1));
   }
