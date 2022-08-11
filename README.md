@@ -1,6 +1,7 @@
 # timekeeperv2
 
-A new Flutter project.
+TimeKeeper is a tools to manage the working time, have a daily, weekly or monthly report and can be export in CSV. 
+This tools is write in Flutter and test on Android and I-Phone 
 
 ## Getting Started
 

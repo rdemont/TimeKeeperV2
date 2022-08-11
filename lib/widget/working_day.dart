@@ -7,6 +7,7 @@ import 'package:timekeeperv2/business/working_slot.dart';
 import 'package:timekeeperv2/utils/application.dart';
 
 import 'package:timekeeperv2/widget/daily_picker.dart';
+
 //import 'package:weekly_date_picker/weekly_date_picker.dart';
 import 'package:timekeeperv2/utils/utils.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -177,7 +178,7 @@ class _WorkingDayWidget extends State<WorkingDayWidget> {
                             ),
                           ));
                     },
-                    itemCount: slotListFiltered!.length,
+                    itemCount: slotListFiltered.length,
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     padding: EdgeInsets.all(5),
