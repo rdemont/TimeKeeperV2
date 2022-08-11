@@ -2,8 +2,9 @@ library daily_picker;
 
 import 'package:flutter/material.dart';
 import 'package:timekeeperv2/utils/application.dart';
-import 'package:week_of_year/week_of_year.dart';
-import "package:weekly_date_picker/datetime_apis.dart";
+import 'package:timekeeperv2/utils/date_extensions.dart';
+//import 'package:week_of_year/week_of_year.dart';
+//import "package:weekly_date_picker/datetime_apis.dart";
 
 class DailyPicker extends StatefulWidget {
   DailyPicker({

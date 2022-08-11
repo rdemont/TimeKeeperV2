@@ -1,9 +1,11 @@
 //import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:progressive_time_picker/progressive_time_picker.dart';
 
 import 'package:timekeeperv2/sql/working_slot_db.dart';
 import 'package:timekeeperv2/utils/utils.dart';
+import 'package:timekeeperv2/utils/date_extensions.dart';
 
 class WorkingSlot extends Comparable {
   static int STATE_NONE = 0;
@@ -82,6 +84,10 @@ class WorkingSlot extends Comparable {
     if (_endTime == null) return 0;
     return (((endHour ?? 0) - startHour) * 60) +
         ((endMinute ?? 0) - startMinute);
+  }
+
+  String get csv {
+    return "_${date.formated("dd.MM.YYYY")};${_startTime.hour}:${_startTime.minute};${_endTime!.hour}:${_endTime!.minute};${_description ?? ""}";
   }
 
   WorkingSlot(int id, DateTime date, TimeOfDay startTime, TimeOfDay? endTime,
@@ -201,13 +207,9 @@ class WorkingSlotsList {
 
   void checkList() {
     print("**CheckList Before** ${this.toString()}");
-    /*
-    slotList
-        .where((obj) => (!obj._valid))
-        .toList()
-        .forEach((element) => element.toDelete());
-*/
+
     if (slotList.isNotEmpty) {
+      /*
       sortAsc();
       WorkingSlot last = slotList[0];
       for (var i = 1; i < slotList.length; i++) {
@@ -229,7 +231,7 @@ class WorkingSlotsList {
           last = cur;
         }
       }
-
+      */
       List<WorkingSlot> removeList = [];
 
       slotList
@@ -305,6 +307,14 @@ class WorkingSlotsList {
     int result = 0;
     slotList.forEach((element) {
       result += element.minutes;
+    });
+    return result;
+  }
+
+  String csv() {
+    String result = "";
+    slotList.forEach((element) {
+      result += element.csv;
     });
     return result;
   }
