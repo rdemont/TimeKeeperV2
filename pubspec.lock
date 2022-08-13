@@ -50,13 +50,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  date_field:
-    dependency: "direct main"
-    description:
-      name: date_field
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -83,6 +76,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_date_picker_timeline:
+    dependency: "direct main"
+    description:
+      name: flutter_date_picker_timeline
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -108,7 +108,7 @@ packages:
     source: sdk
     version: "0.0.0"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -198,13 +198,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
-  progressive_time_picker:
-    dependency: "direct main"
+  scroll_to_index:
+    dependency: transitive
     description:
-      name: progressive_time_picker
+      name: scroll_to_index
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "2.1.1"
+  shamsi_date:
+    dependency: transitive
+    description:
+      name: shamsi_date
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   shared_preferences:
     dependency: "direct main"
     description:

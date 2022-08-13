@@ -6,6 +6,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../utils/utils.dart';
 import 'daily_picker.dart';
+import 'main_page.dart';
 
 class ContextMainWidget extends StatefulWidget {
   ContextMainWidget(
@@ -15,6 +16,7 @@ class ContextMainWidget extends StatefulWidget {
       required this.currentDate,
       required this.viewType,
       required this.onChange,
+      required this.onEdit,
       required this.workingSlotsList})
       : super(key: key);
 
@@ -24,6 +26,7 @@ class ContextMainWidget extends StatefulWidget {
   WorkingSlotsList workingSlotsList;
   int viewType;
   final Function(DateTime currentDate, int type) onChange;
+  final Function(WorkingSlot? ws) onEdit;
 
   @override
   _ContextMainWidget createState() => _ContextMainWidget();
@@ -44,10 +47,7 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                   // An action can be bigger than the others.
                   flex: 2,
                   onPressed: (context) {
-                    //TODO
-                    //Navigator.pushNamed(context, '/edit',
-                    //        arguments: slotListFiltered[index])
-                    //    .then(onPop);
+                    widget.onEdit(widget.workingSlotsList[index]);
                   },
                   backgroundColor: Colors.blueGrey,
                   foregroundColor: Colors.white,
@@ -97,19 +97,43 @@ class _ContextMainWidget extends State<ContextMainWidget> {
               ]),
               child: Card(
                   child: ListTile(
-                title: Text(Utils.instance
-                        .longDate(widget.workingSlotsList[index]!.date) +
-                    " * " +
-                    Utils.instance
-                        .longHour(widget.workingSlotsList[index]!.startTime) +
-                    " - " +
-                    Utils.instance
-                        .longHour(widget.workingSlotsList[index]!.endTime) +
-                    " " +
-                    Utils.instance.humainReadableMinutes(
-                        widget.workingSlotsList[index]!.minutes)),
+                title: Row(children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text("From : "),
+                      Text("To : "),
+                    ],
+                  ),
+                  Column(children: [
+                    Text(Utils.instance
+                        .longHour(widget.workingSlotsList[index]!.startTime)),
+                    Text(Utils.instance
+                        .longHour(widget.workingSlotsList[index]!.endTime)),
+                  ]),
+                  Container(
+                    width: 40,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text("Total in minuts : "),
+                      Text("Total in decimal : "),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(Utils.instance.humainReadableMinutesPerHour(
+                          widget.workingSlotsList[index]!.minutes)),
+                      Text(Utils.instance.humainReadableMinutesPerHour(
+                          widget.workingSlotsList[index]!.minutes))
+                    ],
+                  ),
+                ]),
                 subtitle:
-                    Text(widget.workingSlotsList[index]!.description ?? "XX"),
+                    Text(widget.workingSlotsList[index]!.description ?? ""),
               )));
         });
   }
@@ -139,7 +163,19 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                       color: Colors.black)),
-              Text("${Utils.instance.humainReadableMinutes(wsl.sumMinutes())}")
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(wsl.sumMinutes() > 0 ? "In hour and Minutes : " : ""),
+                  Text(
+                      "${Utils.instance.humainReadableMinutesPerHour(wsl.sumMinutes())}")
+                ],
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(wsl.sumMinutes() > 0 ? "In hour and decimal : " : ""),
+                Text(
+                    "${Utils.instance.humainReadableDecimalPerHour(wsl.sumMinutes())}")
+              ])
             ]))); //: ));
     return result;
   }
@@ -163,11 +199,17 @@ class _ContextMainWidget extends State<ContextMainWidget> {
     //double heightCel = widget.height / 8;
 
     Color bgColor = Colors.white;
+
+    //weekend
     if (index >= 30) bgColor = Colors.grey;
+
+    //odd line
     if ((index >= 6) && (index < 12))
-      bgColor = Color.fromARGB(255, 228, 227, 227);
+      bgColor = Color.fromARGB(255, 202, 202, 202);
     if ((index >= 18) && (index < 24))
-      bgColor = Color.fromARGB(255, 228, 227, 227);
+      bgColor = Color.fromARGB(255, 202, 201, 201);
+
+    //week result
     if (index >= 42) bgColor = Colors.blueGrey;
     return Container(
         //height: heightCel,

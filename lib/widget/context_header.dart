@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:timekeeperv2/main.dart';
-import 'package:timekeeperv2/utils/date_extensions.dart';
+//import 'package:timekeeperv2/main.dart';
+import '../utils/date_extensions.dart';
 
 import '../utils/utils.dart';
 import 'daily_picker.dart';
+import 'main_page.dart';
 
 class ContextHeaderWidget extends StatefulWidget {
   ContextHeaderWidget({

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 
 extension DateWeekExtensions on DateTime {
@@ -79,5 +81,17 @@ extension DateWeekExtensions on DateTime {
 
   bool isSameDateAs(DateTime? date) {
     return year == date?.year && month == date?.month && day == date?.day;
+  }
+
+  int get dateTimeItNotation {
+    return int.parse(formated("yyyyMMddHHmm"));
+  }
+
+  int get dateItNotation {
+    return int.parse(formated("yyyyMMdd"));
+  }
+
+  TimeOfDay get timeOfDay {
+    return TimeOfDay(hour: hour, minute: minute);
   }
 }

@@ -70,8 +70,7 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
                         if (Application.instance.isWorking()) {
                           WorkingSlot? ws = Application.instance.endWorking();
                           if (ws != null) {
-                            Application.instance.getWorkingSlotsList().add(ws);
-                            ws.save();
+                            widget.onAdd(ws);
                           }
                         } else {
                           Application.instance.startWorking();

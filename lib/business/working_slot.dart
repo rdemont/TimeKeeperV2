@@ -1,7 +1,7 @@
 //import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:progressive_time_picker/progressive_time_picker.dart';
+//import 'package:progressive_time_picker/progressive_time_picker.dart';
 
 import 'package:timekeeperv2/sql/working_slot_db.dart';
 import 'package:timekeeperv2/utils/utils.dart';
@@ -316,12 +316,8 @@ class WorkingSlotsList {
     //result.removeAll();
     slotList
         .where((obj) =>
-            obj.year >= fromDt.year &&
-            obj.month >= fromDt.month &&
-            obj.day >= fromDt.day &&
-            obj.year <= toDt.year &&
-            obj.month <= toDt.month &&
-            obj.day <= toDt.day &&
+            obj.date.dateItNotation >= fromDt.dateItNotation &&
+            obj.date.dateItNotation <= toDt.dateItNotation &&
             obj._state != WorkingSlot.STATE_DELETED)
         .forEach((element) => result.add(element));
     result.sortAsc();
