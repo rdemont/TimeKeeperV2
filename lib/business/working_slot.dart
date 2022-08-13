@@ -1,7 +1,7 @@
 //import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:progressive_time_picker/progressive_time_picker.dart';
+//import 'package:progressive_time_picker/progressive_time_picker.dart';
 
 import 'package:timekeeperv2/sql/working_slot_db.dart';
 import 'package:timekeeperv2/utils/utils.dart';
@@ -14,7 +14,7 @@ class WorkingSlot extends Comparable {
 
   WorkingSlotDB wsDB = WorkingSlotDB();
 
-  late int _id;
+  int _id = 0;
   late DateTime _date;
   late TimeOfDay _startTime;
   late TimeOfDay? _endTime;
@@ -24,6 +24,14 @@ class WorkingSlot extends Comparable {
   int get id => _id;
   void set id(int id) {
     _id = id;
+  }
+
+  WorkingSlot.create(
+      date, TimeOfDay startTime, TimeOfDay? endTime, String? description) {
+    _date = date;
+    _startTime = startTime;
+    _endTime = endTime;
+    _description = description;
   }
 
   String? get description => _description;
@@ -195,14 +203,14 @@ class WorkingSlotsList {
     return newWS;
   }
 
-  _loadData() async {
+  loadData() async {
     slotList.clear();
     List<Map<String, dynamic>> list = await wsDB.queryAllRows();
     list.forEach((row) => slotList.add(WorkingSlot.fromMap(row)));
   }
 
   WorkingSlotsList() {
-    _loadData();
+    //_loadData();
   }
 
   void checkList() {
@@ -260,7 +268,7 @@ class WorkingSlotsList {
     slotList.removeWhere((element) => element._id == id);
   }
 
-  void removeAll() {
+  void clear() {
     slotList.clear();
   }
 
@@ -268,7 +276,7 @@ class WorkingSlotsList {
 
   WorkingSlotsList perYear(int year) {
     WorkingSlotsList result = WorkingSlotsList();
-    result.removeAll();
+    //result.clear();
     slotList
         .where((obj) => obj.year == year)
         .toList()
@@ -280,7 +288,7 @@ class WorkingSlotsList {
 
   WorkingSlotsList perYearMonth(int year, int month) {
     WorkingSlotsList result = WorkingSlotsList();
-    result.removeAll();
+    //result.clear();
     slotList
         .where((obj) => ((obj.year == year) && (obj.month == month)))
         .toList()
@@ -291,12 +299,25 @@ class WorkingSlotsList {
 
   WorkingSlotsList perDate(int year, int month, int day) {
     WorkingSlotsList result = WorkingSlotsList();
-    result.removeAll();
+    //result.removeAll();
     slotList
         .where((obj) =>
             obj.year == year &&
             obj.month == month &&
             obj.day == day &&
+            obj._state != WorkingSlot.STATE_DELETED)
+        .forEach((element) => result.add(element));
+    result.sortAsc();
+    return result;
+  }
+
+  WorkingSlotsList perDateInterval(DateTime fromDt, DateTime toDt) {
+    WorkingSlotsList result = WorkingSlotsList();
+    //result.removeAll();
+    slotList
+        .where((obj) =>
+            obj.date.dateItNotation >= fromDt.dateItNotation &&
+            obj.date.dateItNotation <= toDt.dateItNotation &&
             obj._state != WorkingSlot.STATE_DELETED)
         .forEach((element) => result.add(element));
     result.sortAsc();

@@ -27,6 +27,7 @@ class Application {
   WorkingSlotsList getWorkingSlotsList() {
     if (_workingSlotsList == null) {
       _workingSlotsList = WorkingSlotsList();
+      _workingSlotsList!.loadData();
     }
     return _workingSlotsList ?? WorkingSlotsList();
   }
@@ -66,9 +67,11 @@ class Application {
           0,
           _startWorking!,
           TimeOfDay(hour: _startWorking!.hour, minute: _startWorking!.minute),
-          TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
+          TimeOfDay(hour: endWorking!.hour, minute: endWorking!.minute),
           "");
+      ws.description = ""; // needed to set the stats
       _startWorking = null;
+      sharedPreferences.then((value) => value.remove("START_WORKING"));
       return ws;
     }
   }

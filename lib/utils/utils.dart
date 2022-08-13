@@ -123,6 +123,8 @@ class Utils {
         return "August";
       case DateTime.september:
         return "September";
+      case DateTime.october:
+        return "October";
       case DateTime.november:
         return "November";
       case DateTime.december:

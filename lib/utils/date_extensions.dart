@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 
 extension DateWeekExtensions on DateTime {
@@ -48,6 +50,22 @@ extension DateWeekExtensions on DateTime {
     return DateTime(year, month + 1, 0);
   }
 
+  DateTime get firstDayOfTheMonthView {
+    DateTime dtStart = firstDayOfTheMonth;
+    while (dtStart.weekday != DateTime.monday) {
+      dtStart = dtStart.add(Duration(days: -1));
+    }
+    return dtStart;
+  }
+
+  DateTime get lastDayOfTheMonthView {
+    DateTime dtEnd = lastDayOfTheMonth;
+    while (dtEnd.weekday != DateTime.sunday) {
+      dtEnd = dtEnd.add(Duration(days: 1));
+    }
+    return dtEnd;
+  }
+
   DateTime get firstDayOfTheWeek {
     return subtract(Duration(days: weekday - 1));
   }
@@ -63,5 +81,17 @@ extension DateWeekExtensions on DateTime {
 
   bool isSameDateAs(DateTime? date) {
     return year == date?.year && month == date?.month && day == date?.day;
+  }
+
+  int get dateTimeItNotation {
+    return int.parse(formated("yyyyMMddHHmm"));
+  }
+
+  int get dateItNotation {
+    return int.parse(formated("yyyyMMdd"));
+  }
+
+  TimeOfDay get timeOfDay {
+    return TimeOfDay(hour: hour, minute: minute);
   }
 }
