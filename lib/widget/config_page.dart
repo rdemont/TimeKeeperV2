@@ -17,7 +17,7 @@ class ConfigPage extends StatefulWidget {
 }
 
 class _ConfigPageState extends State<ConfigPage> {
-  String _title = "Edit";
+  String _title = "Config";
   bool _btnDailyVisible = false;
   bool _btnWeeklyVisible = false;
   bool _btnMonthlyVisible = false;
