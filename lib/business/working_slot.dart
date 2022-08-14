@@ -95,7 +95,7 @@ class WorkingSlot extends Comparable {
   }
 
   String get csv {
-    return "_${date.formated("dd.MM.YYYY")};${_startTime.hour}:${_startTime.minute};${_endTime!.hour}:${_endTime!.minute};${_description ?? ""}";
+    return "${date.formated("dd.MM.yyyy")};${_startTime.hour}:${_startTime.minute};${_endTime!.hour}:${_endTime!.minute};${_description ?? ""}\n";
   }
 
   WorkingSlot(int id, DateTime date, TimeOfDay startTime, TimeOfDay? endTime,

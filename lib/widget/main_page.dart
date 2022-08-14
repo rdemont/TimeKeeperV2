@@ -5,6 +5,7 @@ import 'package:timekeeperv2/widget/context_footer.dart';
 import 'package:timekeeperv2/widget/context_main.dart';
 import 'package:timekeeperv2/business/working_slot.dart';
 
+import '../main.dart';
 import 'context_header.dart';
 
 class ViewType {
@@ -167,25 +168,44 @@ class _MainPageState extends State<MainPage> {
                 itemBuilder: (context) {
               return [
                 PopupMenuItem<int>(
-                  value: 0,
-                  child: Text("My Account"),
-                ),
-                PopupMenuItem<int>(
                   value: 1,
                   child: Text("Settings"),
                 ),
                 PopupMenuItem<int>(
                   value: 2,
-                  child: Text("Logout"),
+                  child: Text("Export"),
                 ),
               ];
             }, onSelected: (value) {
-              if (value == 0) {
-                print("My account menu is selected.");
-              } else if (value == 1) {
-                print("Settings menu is selected.");
-              } else if (value == 2) {
-                print("Logout menu is selected.");
+              switch (value) {
+                case 1: //Settings
+                  print("Settings menu is selected.");
+                  Navigator.pushNamed(context, ViewRoute.VIEW_ROUTE_CONFIG,
+                          arguments: null)
+                      .then((value) {
+                    ; /*
+                    if ((value as bool) && (ws != null)) {
+                      ws.save();
+                      //Application.instance.getWorkingSlotsList().add(ws);
+                      changeDate(ws.date);
+                      }
+                      */
+                  });
+                  break;
+                case 2:
+                  print("Export menu is selected.");
+                  Navigator.pushNamed(context, ViewRoute.VIEW_ROUTE_EXPORT,
+                          arguments: null)
+                      .then((value) {
+                    ; /*
+                    if ((value as bool) && (ws != null)) {
+                      ws.save();
+                      //Application.instance.getWorkingSlotsList().add(ws);
+                      changeDate(ws.date);
+                      }
+                      */
+                  });
+                  break;
               }
             }),
           ],
@@ -219,7 +239,8 @@ class _MainPageState extends State<MainPage> {
                     changeDate(currentDate);
                   },
                   onEdit: (ws) {
-                    Navigator.pushNamed(context, "/edit", arguments: ws)
+                    Navigator.pushNamed(context, ViewRoute.VIEW_ROUTE_ADD_EDIT,
+                            arguments: ws)
                         .then((value) {
                       if ((value as bool) && (ws != null)) {
                         ws.save();
@@ -241,7 +262,8 @@ class _MainPageState extends State<MainPage> {
                   viewType: _viewType,
                   workingSlotsList: _wsList,
                   onAdd: (ws) {
-                    Navigator.pushNamed(context, "/edit", arguments: ws)
+                    Navigator.pushNamed(context, ViewRoute.VIEW_ROUTE_ADD_EDIT,
+                            arguments: ws)
                         .then((value) {
                       if (value as bool) {
                         ws.save();

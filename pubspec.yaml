@@ -1,5 +1,5 @@
 name: timekeeperv2
-description: A new Flutter project.
+description: Working time keeper tools.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -32,6 +32,7 @@ dependencies:
   sqflite: ^2.0.3+1
   path: ^1.8.1
   flutter_slidable: ^2.0.0
+  share_plus: ^4.0.10+1
   #progressive_time_picker : any
   shared_preferences: ^2.0.15
   

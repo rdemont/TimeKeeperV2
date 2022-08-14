@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
-class ConfigPage extends StatefulWidget {
-  const ConfigPage({Key? key}) : super(key: key);
+import 'package:timekeeperv2/utils/application.dart';
+import 'package:timekeeperv2/utils/date_extensions.dart';
+import 'package:timekeeperv2/widget/dropdown_widget.dart';
+
+class ExportPage extends StatefulWidget {
+  const ExportPage({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -13,11 +17,11 @@ class ConfigPage extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<ConfigPage> createState() => _ConfigPageState();
+  State<ExportPage> createState() => _ExportPageState();
 }
 
-class _ConfigPageState extends State<ConfigPage> {
-  String _title = "Config";
+class _ExportPageState extends State<ExportPage> {
+  String _title = "Export";
   bool _btnDailyVisible = false;
   bool _btnWeeklyVisible = false;
   bool _btnMonthlyVisible = false;
@@ -39,7 +43,7 @@ class _ConfigPageState extends State<ConfigPage> {
     _screenBottomStatusBar = MediaQuery.of(context).viewPadding.bottom;
 
     _screenToolsBar = 60;
-    _screenContextHeader = 100;
+    _screenContextHeader = 0;
     _screenContextFooter = 80;
     _screenContextMain = _screenHeight -
         _screenTopStatusBar -
@@ -68,6 +72,20 @@ class _ConfigPageState extends State<ConfigPage> {
   void initState() {
     super.initState();
   }
+/*
+  List<DropdownMenuItem<String>> _ddMonth = [];
+  initDropDownList() {
+    _ddMonth.clear();
+    DateTime dt = DateTime.now().firstDayOfTheMonth;
+    for (int i = 0; i < 13; i++) {
+      _ddMonth.add(DropdownMenuItem(
+        value: dt.formated("yyyyMM"),
+        child: Text(dt.formated("MMMM yyyy")),
+      ));
+      dt = dt.add(Duration(days: -1)).firstDayOfTheMonth;
+    }
+  }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -79,58 +97,19 @@ class _ConfigPageState extends State<ConfigPage> {
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
           title: Text(_title),
-          actions: [
-            IconButton(
-              onPressed: _btnDailyVisible ? () {} : null,
-              icon: const Icon(Icons.calendar_view_day_rounded),
-            ),
-            IconButton(
-                onPressed: _btnWeeklyVisible ? () {} : null,
-                icon: const Icon(Icons.calendar_view_week_rounded)),
-            IconButton(
-                onPressed: _btnMonthlyVisible ? () {} : null,
-                icon: const Icon(Icons.calendar_view_month_rounded)),
-            PopupMenuButton(
-                // add icon, by default "3 dot" icon
-                // icon: Icon(Icons.book)
-                itemBuilder: (context) {
-              return [
-                PopupMenuItem<int>(
-                  value: 0,
-                  child: Text("My Account"),
-                ),
-                PopupMenuItem<int>(
-                  value: 1,
-                  child: Text("Settings"),
-                ),
-                PopupMenuItem<int>(
-                  value: 2,
-                  child: Text("Logout"),
-                ),
-              ];
-            }, onSelected: (value) {
-              if (value == 0) {
-                print("My account menu is selected.");
-              } else if (value == 1) {
-                print("Settings menu is selected.");
-              } else if (value == 2) {
-                print("Logout menu is selected.");
-              }
-            }),
-          ],
         ),
         body: Column(
           children: [
             Container(
-                height: _screenContextHeader,
-                width: _screenWidth,
-                color: Colors.blue,
-                child: Text("Top")),
-            Container(
                 height: _screenContextMain,
                 width: _screenWidth,
                 color: Colors.grey,
-                child: Text("MAIN")),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      DropDownWidget(),
+                    ])),
             Container(
                 height: _screenContextFooter,
                 width: _screenWidth,
