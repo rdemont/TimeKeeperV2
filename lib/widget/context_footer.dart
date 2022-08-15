@@ -33,12 +33,17 @@ class ContextFooterWidget extends StatefulWidget {
 class _ContextFooterWidget extends State<ContextFooterWidget> {
   _ContextFooterWidget();
 
+  bool _isWorking = false;
   @override
   Widget build(BuildContext context) {
     int minutes = widget.workingSlotsList.sumMinutes();
-    bool isWorking = Application.instance.isWorking();
-    String buttonIsWorkingTxt =
-        Application.instance.isWorking() ? 'Is Working' : 'Start working';
+
+    Application.instance.isWorking().then((value) {
+      setState(() {
+        _isWorking = value;
+      });
+    });
+
     return Row(children: [
       Container(
         width: (widget.width / 3) - 40,
@@ -60,29 +65,25 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
                   child: TextButton(
                       style: ElevatedButton.styleFrom(
                           primary:
-                              isWorking ? Colors.red : Colors.blue.shade900,
+                              _isWorking ? Colors.red : Colors.blue.shade900,
                           padding:
                               EdgeInsets.symmetric(horizontal: 3, vertical: 5),
                           shape: const BeveledRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5)))),
                       onPressed: () {
-                        if (Application.instance.isWorking()) {
-                          WorkingSlot? ws = Application.instance.endWorking();
-                          if (ws != null) {
-                            widget.onAdd(ws);
+                        Application.instance.endWorking().then((value) {
+                          if (value != null) {
+                            widget.onAdd(value);
+                          } else {
+                            Application.instance.startWorking();
                           }
-                        } else {
-                          Application.instance.startWorking();
-                        }
-                        setState(() {
-                          buttonIsWorkingTxt = Application.instance.isWorking()
-                              ? 'Is Working'
-                              : 'Start working';
-                          isWorking = Application.instance.isWorking();
+                          setState(() {
+                            _isWorking = !_isWorking;
+                          });
                         });
                       },
-                      child: Text(buttonIsWorkingTxt,
+                      child: Text(_isWorking ? 'Is Working' : 'Start working',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 25,

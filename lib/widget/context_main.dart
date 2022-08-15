@@ -127,7 +127,7 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                     children: [
                       Text(Utils.instance.humainReadableMinutesPerHour(
                           widget.workingSlotsList[index]!.minutes)),
-                      Text(Utils.instance.humainReadableMinutesPerHour(
+                      Text(Utils.instance.humainReadableDecimalPerHour(
                           widget.workingSlotsList[index]!.minutes))
                     ],
                   ),

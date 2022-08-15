@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:timekeeperv2/widget/dropdown_widget.dart';
+import 'package:share_plus/share_plus.dart';
+import '../business/working_slot.dart';
 
 class ExportPage extends StatefulWidget {
   const ExportPage({Key? key}) : super(key: key);
@@ -71,7 +73,15 @@ class _ExportPageState extends State<ExportPage> {
   @override
   void initState() {
     super.initState();
+    DateTime dt = DateTime.now()
+        .firstDayOfTheMonth
+        .add(Duration(days: -1))
+        .firstDayOfTheMonth;
+    //_ddMonthValue = dt.formated("yyyyMM");
+    changeDate(dt);
+    initDropDownList();
   }
+
 /*
   List<DropdownMenuItem<String>> _ddMonth = [];
   initDropDownList() {
@@ -86,6 +96,40 @@ class _ExportPageState extends State<ExportPage> {
     }
   }
 */
+  int _currentIndex = 1;
+  List<DropdownMenuItem<String>> _ddMonth = [];
+  void initDropDownList() {
+    _ddMonth.clear();
+    DateTime dt = DateTime.now().firstDayOfTheMonth;
+    for (int i = 0; i < 13; i++) {
+      _ddMonth.add(DropdownMenuItem(
+        value: dt.formated("yyyyMM"),
+        child: Text(dt.formated("MMMM yyyy")),
+      ));
+      dt = dt.add(Duration(days: -1)).firstDayOfTheMonth;
+    }
+
+    //_ddMonthValue = _ddMonth[1].value ?? "";
+  }
+
+  void _onShare(BuildContext context, String text, String subject) async {
+    final box = context.findRenderObject() as RenderBox?;
+
+    if (text.length == 0) {
+      text = subject;
+    }
+
+    await Share.share(text,
+        subject: subject,
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
+  }
+
+  late WorkingSlotsList _wsl;
+  void changeDate(DateTime dt) {
+    _wsl = Application.instance
+        .getWorkingSlotsList()
+        .perYearMonth(dt.year, dt.month);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +152,28 @@ class _ExportPageState extends State<ExportPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      DropDownWidget(),
+                      DropDownWidget(
+                        items: _ddMonth,
+                        defaultIndex: _currentIndex,
+                        onChange: (index) {
+                          setState(() {
+                            DateTime dt = DateTime(
+                                int.parse(
+                                    _ddMonth[index].value!.substring(0, 4)),
+                                int.parse(
+                                    _ddMonth[index].value!.substring(4, 6)),
+                                1);
+                            changeDate(dt);
+                            //print(_ddMonthValue);
+                          });
+                        },
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            _onShare(context, _wsl.csv(), "Test CSV");
+                            print("Export");
+                          },
+                          child: Text("Export"))
                     ])),
             Container(
                 height: _screenContextFooter,

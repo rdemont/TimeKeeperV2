@@ -5,6 +5,7 @@ import 'package:timekeeperv2/utils/date_extensions.dart';
 
 class Application {
   Application._privateConstructor() {
+    /*
     sharedPreferences.then((value) {
       String str = value.getString("START_WORKING") ?? "";
       _startWorking = DateTime.tryParse(str);
@@ -17,6 +18,7 @@ class Application {
         }
       }
     });
+    */
   }
 
   static final Application instance = Application._privateConstructor();
@@ -56,7 +58,7 @@ class Application {
         value.setString("START_WORKING", _startWorking!.toIso8601String()));
   }
 
-  WorkingSlot? endWorking() {
+  Future<WorkingSlot?> endWorking() async {
     if (_startWorking != null) {
       DateTime endWorking = DateTime.now();
       if (!endWorking.isSameDateAs(_startWorking)) {
@@ -76,7 +78,9 @@ class Application {
     }
   }
 
-  bool isWorking() {
-    return _startWorking != null;
+  Future<bool> isWorking() async {
+    return _prefs.then((value) {
+      return value.getString("START_WORKING") != null;
+    });
   }
 }

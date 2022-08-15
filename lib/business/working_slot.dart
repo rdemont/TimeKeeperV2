@@ -95,7 +95,7 @@ class WorkingSlot extends Comparable {
   }
 
   String get csv {
-    return "${date.formated("dd.MM.yyyy")};${_startTime.hour}:${_startTime.minute};${_endTime!.hour}:${_endTime!.minute};${_description ?? ""}\n";
+    return "${date.formated("dd.MM.yyyy")};${_startTime.hour}:${_startTime.minute};${_endTime!.hour}:${_endTime!.minute};${Utils.instance.humainReadableMinutesPerHour(minutes)};${Utils.instance.humainReadableDecimalPerHour(minutes)};${_description ?? ""}\n";
   }
 
   WorkingSlot(int id, DateTime date, TimeOfDay startTime, TimeOfDay? endTime,
@@ -333,7 +333,7 @@ class WorkingSlotsList {
   }
 
   String csv() {
-    String result = "";
+    String result = "DATE;FROM;TO;HOUR_MINUTE;HOUR_DECIMAL;DESCRIPTION\n";
     slotList.forEach((element) {
       result += element.csv;
     });

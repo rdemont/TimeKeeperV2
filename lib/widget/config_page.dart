@@ -79,45 +79,6 @@ class _ConfigPageState extends State<ConfigPage> {
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
           title: Text(_title),
-          actions: [
-            IconButton(
-              onPressed: _btnDailyVisible ? () {} : null,
-              icon: const Icon(Icons.calendar_view_day_rounded),
-            ),
-            IconButton(
-                onPressed: _btnWeeklyVisible ? () {} : null,
-                icon: const Icon(Icons.calendar_view_week_rounded)),
-            IconButton(
-                onPressed: _btnMonthlyVisible ? () {} : null,
-                icon: const Icon(Icons.calendar_view_month_rounded)),
-            PopupMenuButton(
-                // add icon, by default "3 dot" icon
-                // icon: Icon(Icons.book)
-                itemBuilder: (context) {
-              return [
-                PopupMenuItem<int>(
-                  value: 0,
-                  child: Text("My Account"),
-                ),
-                PopupMenuItem<int>(
-                  value: 1,
-                  child: Text("Settings"),
-                ),
-                PopupMenuItem<int>(
-                  value: 2,
-                  child: Text("Logout"),
-                ),
-              ];
-            }, onSelected: (value) {
-              if (value == 0) {
-                print("My account menu is selected.");
-              } else if (value == 1) {
-                print("Settings menu is selected.");
-              } else if (value == 2) {
-                print("Logout menu is selected.");
-              }
-            }),
-          ],
         ),
         body: Column(
           children: [

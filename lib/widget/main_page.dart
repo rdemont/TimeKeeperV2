@@ -4,6 +4,7 @@ import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:timekeeperv2/widget/context_footer.dart';
 import 'package:timekeeperv2/widget/context_main.dart';
 import 'package:timekeeperv2/business/working_slot.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../main.dart';
 import 'context_header.dart';
@@ -31,7 +32,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  String _title = "Daily";
+  String _title = "XX";
 
   bool _btnDailyVisible = false;
   bool _btnWeeklyVisible = true;
@@ -101,7 +102,7 @@ class _MainPageState extends State<MainPage> {
         _btnDailyVisible = false;
         _btnWeeklyVisible = true;
         _btnMonthlyVisible = true;
-        _title = "Daily";
+        _title = AppLocalizations.of(context)!.title_daily;
         break;
       case ViewType.VIEW_TYPE_WEEKLY:
         _wsList = Application.instance
@@ -110,7 +111,7 @@ class _MainPageState extends State<MainPage> {
         _btnDailyVisible = true;
         _btnWeeklyVisible = false;
         _btnMonthlyVisible = true;
-        _title = "Weekly";
+        _title = AppLocalizations.of(context)!.title_daily;
         break;
       case ViewType.VIEW_TYPE_MONTHLY:
         _wsList = Application.instance.getWorkingSlotsList().perDateInterval(
@@ -118,7 +119,7 @@ class _MainPageState extends State<MainPage> {
         _btnDailyVisible = true;
         _btnWeeklyVisible = true;
         _btnMonthlyVisible = false;
-        _title = "Monthly";
+        _title = AppLocalizations.of(context)!.title_daily;
         break;
     }
     setState(() {
@@ -169,11 +170,11 @@ class _MainPageState extends State<MainPage> {
               return [
                 PopupMenuItem<int>(
                   value: 1,
-                  child: Text("Settings"),
+                  child: Text(AppLocalizations.of(context)!.menu_settings),
                 ),
                 PopupMenuItem<int>(
                   value: 2,
-                  child: Text("Export"),
+                  child: Text(AppLocalizations.of(context)!.menu_export),
                 ),
               ];
             }, onSelected: (value) {
