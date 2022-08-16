@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:timekeeperv2/business/working_slot.dart';
-import 'package:timekeeperv2/utils/application.dart';
-import 'package:timekeeperv2/utils/date_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DropDownWidget extends StatefulWidget {
   DropDownWidget({

@@ -4,6 +4,8 @@ import 'package:timekeeperv2/main.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../utils/application.dart';
 import '../utils/utils.dart';
 import 'daily_picker.dart';

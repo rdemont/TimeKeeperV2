@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ConfigPage extends StatefulWidget {
   const ConfigPage({Key? key}) : super(key: key);
 
@@ -17,7 +19,7 @@ class ConfigPage extends StatefulWidget {
 }
 
 class _ConfigPageState extends State<ConfigPage> {
-  String _title = "Config";
+  String _title = "XX";
   bool _btnDailyVisible = false;
   bool _btnWeeklyVisible = false;
   bool _btnMonthlyVisible = false;
@@ -67,6 +69,7 @@ class _ConfigPageState extends State<ConfigPage> {
   @override
   void initState() {
     super.initState();
+    _title = AppLocalizations.of(context)!.title_settings;
   }
 
   @override

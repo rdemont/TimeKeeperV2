@@ -69,7 +69,7 @@ class Application {
           0,
           _startWorking!,
           TimeOfDay(hour: _startWorking!.hour, minute: _startWorking!.minute),
-          TimeOfDay(hour: endWorking!.hour, minute: endWorking!.minute),
+          TimeOfDay(hour: endWorking.hour, minute: endWorking.minute),
           "");
       ws.description = ""; // needed to set the stats
       _startWorking = null;

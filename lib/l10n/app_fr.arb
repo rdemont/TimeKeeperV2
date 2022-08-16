@@ -3,6 +3,8 @@
     "title_daily": "Jour",
     "title_weekly": "Semaine",
     "title_monthly": "Mois",
+    "title_settings": "Settings",
+    "title_export": "Export",
     "menu_settings": "Settings",
     "menu_export": "Export"
 }

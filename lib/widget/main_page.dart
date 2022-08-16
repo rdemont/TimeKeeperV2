@@ -87,6 +87,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    _title = AppLocalizations.of(context)!.title_daily;
     _wsList = Application.instance
         .getWorkingSlotsList()
         .perDate(_currentDate.year, _currentDate.month, _currentDate.day);
@@ -111,7 +112,7 @@ class _MainPageState extends State<MainPage> {
         _btnDailyVisible = true;
         _btnWeeklyVisible = false;
         _btnMonthlyVisible = true;
-        _title = AppLocalizations.of(context)!.title_daily;
+        _title = AppLocalizations.of(context)!.title_weekly;
         break;
       case ViewType.VIEW_TYPE_MONTHLY:
         _wsList = Application.instance.getWorkingSlotsList().perDateInterval(
@@ -119,7 +120,7 @@ class _MainPageState extends State<MainPage> {
         _btnDailyVisible = true;
         _btnWeeklyVisible = true;
         _btnMonthlyVisible = false;
-        _title = AppLocalizations.of(context)!.title_daily;
+        _title = AppLocalizations.of(context)!.title_monthly;
         break;
     }
     setState(() {
@@ -180,7 +181,7 @@ class _MainPageState extends State<MainPage> {
             }, onSelected: (value) {
               switch (value) {
                 case 1: //Settings
-                  print("Settings menu is selected.");
+                  //print("Settings menu is selected.");
                   Navigator.pushNamed(context, ViewRoute.VIEW_ROUTE_CONFIG,
                           arguments: null)
                       .then((value) {
@@ -194,7 +195,7 @@ class _MainPageState extends State<MainPage> {
                   });
                   break;
                 case 2:
-                  print("Export menu is selected.");
+                  //print("Export menu is selected.");
                   Navigator.pushNamed(context, ViewRoute.VIEW_ROUTE_EXPORT,
                           arguments: null)
                       .then((value) {

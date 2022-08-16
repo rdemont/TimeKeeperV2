@@ -2,6 +2,8 @@
     "title_daily": "Daily",
     "title_weekly": "Weekly",
     "title_monthly": "Monthly",
+    "title_settings": "Settings",
+    "title_export": "Export",
     "menu_settings": "Settings",
     "menu_export": "Export"
 }

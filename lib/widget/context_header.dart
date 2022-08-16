@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 //import 'package:timekeeperv2/main.dart';
 import '../utils/date_extensions.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/utils.dart';
 import 'daily_picker.dart';
 import 'main_page.dart';

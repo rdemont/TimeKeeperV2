@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:timekeeperv2/widget/dropdown_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 import '../business/working_slot.dart';
 

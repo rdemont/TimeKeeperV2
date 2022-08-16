@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/time_of_day_extensions.dart';
 
 import '../business/working_slot.dart';

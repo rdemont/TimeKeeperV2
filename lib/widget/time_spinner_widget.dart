@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../utils/date_extensions.dart';
 import '../utils/time_of_day_extensions.dart';
 import '../utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TimeSpinnerSlot {
   TimeSpinnerSlot(TimeOfDay fromTime, TimeOfDay toTime) {
