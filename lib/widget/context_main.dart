@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:timekeeperv2/business/working_slot.dart';
+
 import 'package:timekeeperv2/main.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../business/time_slot.dart';
 import '../utils/utils.dart';
 import 'daily_picker.dart';
 import 'main_page.dart';
@@ -19,16 +20,18 @@ class ContextMainWidget extends StatefulWidget {
       required this.viewType,
       required this.onChange,
       required this.onEdit,
-      required this.workingSlotsList})
+      required this.onDelete,
+      required this.timeSlotList})
       : super(key: key);
 
   final double height;
   final double width;
   DateTime currentDate;
-  WorkingSlotsList workingSlotsList;
+  TimeSlotList timeSlotList;
   int viewType;
   final Function(DateTime currentDate, int type) onChange;
-  final Function(WorkingSlot? ws) onEdit;
+  final Function(TimeSlot? timeSlot) onEdit;
+  final Function(TimeSlot? timeSlot) onDelete;
 
   @override
   _ContextMainWidget createState() => _ContextMainWidget();
@@ -39,7 +42,7 @@ class _ContextMainWidget extends State<ContextMainWidget> {
 
   Widget getDaily() {
     return ListView.builder(
-        itemCount: widget.workingSlotsList.length,
+        itemCount: widget.timeSlotList.length,
         itemBuilder: (BuildContext, index) {
           return Slidable(
               closeOnScroll: true,
@@ -49,7 +52,7 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                   // An action can be bigger than the others.
                   flex: 2,
                   onPressed: (context) {
-                    widget.onEdit(widget.workingSlotsList[index]);
+                    widget.onEdit(widget.timeSlotList[index]);
                   },
                   backgroundColor: Colors.blueGrey,
                   foregroundColor: Colors.white,
@@ -67,10 +70,8 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {
-                                    widget.workingSlotsList[index]!.toDelete();
-                                    widget.workingSlotsList[index]!.save();
-                                    //setDate(Application.instance.getCurrentDate());
-                                    //Navigator.of(context).pop();
+                                    widget.onDelete(widget.timeSlotList[index]);
+                                    Navigator.of(context).pop();
                                   },
                                   child: Container(
                                     color: Colors.grey,
@@ -110,9 +111,9 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                   ),
                   Column(children: [
                     Text(Utils.instance
-                        .longHour(widget.workingSlotsList[index]!.startTime)),
+                        .longHour(widget.timeSlotList[index]!.startTime)),
                     Text(Utils.instance
-                        .longHour(widget.workingSlotsList[index]!.endTime)),
+                        .longHour(widget.timeSlotList[index]!.endTime)),
                   ]),
                   Container(
                     width: 40,
@@ -128,27 +129,28 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                   Column(
                     children: [
                       Text(Utils.instance.humainReadableMinutesPerHour(
-                          widget.workingSlotsList[index]!.minutes)),
+                          widget.timeSlotList[index]!.minutes)),
                       Text(Utils.instance.humainReadableDecimalPerHour(
-                          widget.workingSlotsList[index]!.minutes))
+                          widget.timeSlotList[index]!.minutes))
                     ],
                   ),
                 ]),
-                subtitle:
-                    Text(widget.workingSlotsList[index]!.description ?? ""),
+                subtitle: Text(widget.timeSlotList[index]!.description ?? ""),
               )));
         });
   }
 
   Widget createDayOfTheWeek(DateTime dt) {
     Color bgColor = Colors.white;
-    int totMinutes = 0;
+    //int totMinutes = 0;
+    int dayMinutes = 0;
     if ((dt.weekday == DateTime.saturday) || (dt.weekday == DateTime.sunday)) {
       bgColor = Colors.grey;
     }
-    WorkingSlotsList wsl =
-        widget.workingSlotsList.perDate(dt.year, dt.month, dt.day);
-    totMinutes += wsl.sumMinutes();
+
+    //TimeSlotList timeSlotList =widget.timeSlotList.perDate(dt.year, dt.month, dt.day);
+    dayMinutes = widget.timeSlotList.minutesForDay(dt); //timeSlotList.minutes;
+    //totMinutes += dayMinutes ;
     Widget result = GestureDetector(
         onTap: () {
           widget.onChange(dt, ViewType.VIEW_TYPE_DAILY);
@@ -168,15 +170,15 @@ class _ContextMainWidget extends State<ContextMainWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(wsl.sumMinutes() > 0 ? "In hour and Minutes : " : ""),
+                  Text(dayMinutes > 0 ? "In hour and Minutes : " : ""),
                   Text(
-                      "${Utils.instance.humainReadableMinutesPerHour(wsl.sumMinutes())}")
+                      "${Utils.instance.humainReadableMinutesPerHour(dayMinutes)}")
                 ],
               ),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(wsl.sumMinutes() > 0 ? "In hour and decimal : " : ""),
+                Text(dayMinutes > 0 ? "In hour and decimal : " : ""),
                 Text(
-                    "${Utils.instance.humainReadableDecimalPerHour(wsl.sumMinutes())}")
+                    "${Utils.instance.humainReadableDecimalPerHour(dayMinutes)}")
               ])
             ]))); //: ));
     return result;
@@ -342,9 +344,10 @@ class _ContextMainWidget extends State<ContextMainWidget> {
               .add(monthCreateWeekTotal(i, dtweek, firstWeek, weeksMinutes));
           dtweek = dtweek.add(Duration(days: 7));
         } else {
-          int minutes = widget.workingSlotsList
-              .perDate(dt.year, dt.month, dt.day)
-              .sumMinutes();
+          int minutes = widget.timeSlotList.minutesForDay(dt);
+
+          //    widget.timeSlotList.perDate(dt.year, dt.month, dt.day).minutes;
+
           weeksMinutes[dt.weekOfYear - firstWeek] += minutes;
           monthItem.add(monthCreateDay(dt, firstWeek, minutes));
           if (((i + 1) % 6) == 0) {

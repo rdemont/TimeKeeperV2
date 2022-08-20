@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:timekeeperv2/business/time_slot.dart';
 import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:timekeeperv2/widget/context_footer.dart';
 import 'package:timekeeperv2/widget/context_main.dart';
-import 'package:timekeeperv2/business/working_slot.dart';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../main.dart';
@@ -40,7 +41,7 @@ class _MainPageState extends State<MainPage> {
 
   DateTime _currentDate = DateTime.now();
   int _viewType = ViewType.VIEW_TYPE_DAILY;
-  late WorkingSlotsList _wsList;
+  TimeSlotList _timeSlotList = TimeSlotHelper().emptyList;
 
   double _screenWidth = 0;
   double _screenHeight = 0;
@@ -87,36 +88,43 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    _title = AppLocalizations.of(context)!.title_daily;
-    _wsList = Application.instance
-        .getWorkingSlotsList()
-        .perDate(_currentDate.year, _currentDate.month, _currentDate.day);
+
+    //_timeSlotList = TimeSlotHelper()
+    //.perDate(_currentDate.year, _currentDate.month, _currentDate.day);
   }
 
-  void changeDate(DateTime dt) {
-    _wsList.clear();
+  void changeDate(DateTime dt) async {
+    //_timeSlotList.clear();
     switch (_viewType) {
       case ViewType.VIEW_TYPE_DAILY:
-        _wsList = Application.instance
-            .getWorkingSlotsList()
-            .perDate(dt.year, dt.month, dt.day);
+        TimeSlotHelper().perDate(dt.year, dt.month, dt.day).then((value) {
+          setState(() {
+            _timeSlotList = value;
+          });
+        });
         _btnDailyVisible = false;
         _btnWeeklyVisible = true;
         _btnMonthlyVisible = true;
         _title = AppLocalizations.of(context)!.title_daily;
         break;
       case ViewType.VIEW_TYPE_WEEKLY:
-        _wsList = Application.instance
-            .getWorkingSlotsList()
-            .perDateInterval(dt.firstDayOfTheWeek, dt.lastDayOfTheWeek);
+        TimeSlotHelper()
+            .perDateInterval(dt.firstDayOfTheWeek, dt.lastDayOfTheWeek)
+            .then((value) {
+          _timeSlotList = value;
+        });
         _btnDailyVisible = true;
         _btnWeeklyVisible = false;
         _btnMonthlyVisible = true;
         _title = AppLocalizations.of(context)!.title_weekly;
         break;
       case ViewType.VIEW_TYPE_MONTHLY:
-        _wsList = Application.instance.getWorkingSlotsList().perDateInterval(
-            dt.firstDayOfTheMonthView, dt.lastDayOfTheMonthView);
+        TimeSlotHelper()
+            .perDateInterval(
+                dt.firstDayOfTheMonthView, dt.lastDayOfTheMonthView)
+            .then((value) {
+          _timeSlotList = value;
+        });
         _btnDailyVisible = true;
         _btnWeeklyVisible = true;
         _btnMonthlyVisible = false;
@@ -131,7 +139,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     initScreenSize();
-
+    changeDate(_currentDate);
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: _screenToolsBar,
@@ -251,7 +259,14 @@ class _MainPageState extends State<MainPage> {
                       }
                     });
                   },
-                  workingSlotsList: _wsList,
+                  onDelete: (timeSlot) {
+                    if (timeSlot != null) {
+                      TimeSlotHelper()
+                          .delete(timeSlot)
+                          .then((value) => changeDate(timeSlot.date));
+                    }
+                  },
+                  timeSlotList: _timeSlotList,
                 )),
             Container(
                 height: _screenContextFooter,
@@ -262,14 +277,16 @@ class _MainPageState extends State<MainPage> {
                   width: _screenWidth,
                   currentDate: _currentDate,
                   viewType: _viewType,
-                  workingSlotsList: _wsList,
+                  timeSlotList: _timeSlotList,
                   onAdd: (ws) {
                     Navigator.pushNamed(context, ViewRoute.VIEW_ROUTE_ADD_EDIT,
                             arguments: ws)
                         .then((value) {
                       if (value as bool) {
-                        ws.save();
-                        Application.instance.getWorkingSlotsList().add(ws);
+                        //Application.instance.getTimeSlotList().add(ws);
+
+                        ws.addInBox().then((value) => ws.save());
+
                         changeDate(ws.date);
                       }
                     });

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../business/time_slot.dart';
 import '../utils/time_of_day_extensions.dart';
 
-import '../business/working_slot.dart';
 import 'time_spinner_widget.dart';
 
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
@@ -41,7 +41,7 @@ class _EditPageState extends State<EditPage> {
   double _screenContextFooter = 0;
   double _screenContextMain = 0;
 
-  late WorkingSlot _workingSlot;
+  TimeSlot _timeSlot = TimeSlot.createEmpty();
 
   void initScreenSize() {
     _screenWidth = MediaQuery.of(context).size.width;
@@ -75,14 +75,21 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
+  bool _isInited = false;
   void initParameter() {
-    final WorkingSlot? args =
-        ModalRoute.of(context)?.settings.arguments as WorkingSlot?;
-    if (args != null) {
-      _workingSlot = args;
-      changeDate();
-    } else {
-      Navigator.pop(context);
+    if (!_isInited) {
+      _isInited = true;
+      final TimeSlot? args =
+          ModalRoute.of(context)?.settings.arguments as TimeSlot?;
+      if (args != null) {
+        //setState(() {
+        _timeSlot = args;
+        //});
+
+        changeDate();
+      } else {
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -91,33 +98,36 @@ class _EditPageState extends State<EditPage> {
     super.initState();
   }
 
-  late WorkingSlotsList _wsl;
+  TimeSlotList _timeSlotList = TimeSlotHelper().emptyList;
   List<TimeSpinnerSlot> _hiddenSpotFrom = [];
   List<TimeSpinnerSlot> _hiddenSpotTo = [];
 
-  void changeDate() {
-    _wsl = Application.instance.getWorkingSlotsList().perDate(
-        _workingSlot.date.year, _workingSlot.date.month, _workingSlot.date.day);
-
-    List<TimeSpinnerSlot> result = [];
-    result.clear();
-    for (int i = 0; i < _wsl.slotList.length; i++) {
-      if (_wsl.slotList[i].id != _workingSlot.id) {
-        result.add(TimeSpinnerSlot(_wsl.slotList[i].startTime,
-            _wsl.slotList[i].endTime ?? _wsl.slotList[i].startTime));
-      }
-    }
-
-    _hiddenSpotFrom = result;
+  void changeDate() async {
+    TimeSlotHelper()
+        .perDate(_timeSlot.date.year, _timeSlot.date.month, _timeSlot.date.day)
+        .then((value) {
+      setState(() {
+        _timeSlotList = value;
+        List<TimeSpinnerSlot> result = [];
+        result.clear();
+        for (int i = 0; i < _timeSlotList.length; i++) {
+          if (_timeSlotList[i]!.id != _timeSlot.id) {
+            result.add(TimeSpinnerSlot(_timeSlotList[i]!.startTime,
+                _timeSlotList[i]!.endTime ?? _timeSlotList[i]!.startTime));
+          }
+        }
+        _hiddenSpotFrom = result;
+      });
+    });
   }
 
   void hiddenSpotFrom() {
     List<TimeSpinnerSlot> result = [];
     result.clear();
-    for (int i = 0; i < _wsl.slotList.length; i++) {
-      if (_wsl.slotList[i].id != _workingSlot.id) {
-        result.add(TimeSpinnerSlot(_wsl.slotList[i].startTime,
-            _wsl.slotList[i].endTime ?? _wsl.slotList[i].startTime));
+    for (int i = 0; i < _timeSlotList.length; i++) {
+      if (_timeSlotList[i]!.id != _timeSlot.id) {
+        result.add(TimeSpinnerSlot(_timeSlotList[i]!.startTime,
+            _timeSlotList[i]!.endTime ?? _timeSlotList[i]!.startTime));
       }
     }
     setState(() {
@@ -129,11 +139,11 @@ class _EditPageState extends State<EditPage> {
     List<TimeSpinnerSlot> result = [];
     result.clear();
     result.add(TimeSpinnerSlot(TimeOfDay(hour: 0, minute: 0), from));
-    for (int i = 0; i < _wsl.slotList.length; i++) {
-      if (_wsl.slotList[i].id != _workingSlot.id) {
-        if (_wsl.slotList[i].startTime.isAfter(from)) {
+    for (int i = 0; i < _timeSlotList.length; i++) {
+      if (_timeSlotList[i]!.id != _timeSlot.id) {
+        if (_timeSlotList[i]!.startTime.isAfter(from)) {
           result.add(TimeSpinnerSlot(
-              _wsl.slotList[i].startTime, TimeOfDay(hour: 23, minute: 59)));
+              _timeSlotList[i]!.startTime, TimeOfDay(hour: 23, minute: 59)));
         }
       }
     }
@@ -206,17 +216,13 @@ class _EditPageState extends State<EditPage> {
                     FlutterDatePickerTimeline(
                       startDate: DateTime.now().add(Duration(days: -100)),
                       endDate: DateTime.now().add(Duration(days: 100)),
-                      initialSelectedDate: _workingSlot.date,
+                      initialSelectedDate: _timeSlot.date,
                       onSelectedDateChange: (dateTime) {
                         if ((dateTime != null) &&
-                            !(dateTime.isSameDateAs(_workingSlot.date))) {
-                          _workingSlot.date = dateTime;
-                          _wsl = Application.instance
-                              .getWorkingSlotsList()
-                              .perDate(
-                                  _workingSlot.date.year,
-                                  _workingSlot.date.month,
-                                  _workingSlot.date.day);
+                            !(dateTime.isSameDateAs(_timeSlot.date))) {
+                          _timeSlot.date = dateTime;
+                          changeDate();
+                          //_timeSlotList = TimeSlotHelper().perDate(_timeSlot.date.year,_timeSlot.date.month, _timeSlot.date.day);
                           hiddenSpotFrom();
                         }
                       },
@@ -239,10 +245,10 @@ class _EditPageState extends State<EditPage> {
                           minimumTime: TimeOfDay(hour: 0, minute: 0),
                           maximumTime: TimeOfDay(hour: 23, minute: 0),
                           use24hFormat: true,
-                          selectedValue: _workingSlot.startTime,
+                          selectedValue: _timeSlot.startTime,
                           hiddenSlot: _hiddenSpotFrom,
                           onSetTime: (value) {
-                            _workingSlot.startTime = value;
+                            _timeSlot.startTime = value;
                             hiddenSpotTo(value);
                             PageStorage.of(context)!.writeState(
                               context,
@@ -270,10 +276,10 @@ class _EditPageState extends State<EditPage> {
                           maximumTime: TimeOfDay(hour: 23, minute: 59),
                           use24hFormat: true,
                           selectedValue:
-                              _workingSlot.endTime ?? _workingSlot.startTime,
+                              _timeSlot.endTime ?? _timeSlot.startTime,
                           hiddenSlot: _hiddenSpotTo,
                           onSetTime: (value) {
-                            _workingSlot.endTime = value;
+                            _timeSlot.endTime = value;
                           },
                         ),
                       ]),

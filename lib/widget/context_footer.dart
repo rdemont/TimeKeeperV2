@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:timekeeperv2/business/working_slot.dart';
+
 import 'package:timekeeperv2/main.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../business/time_slot.dart';
 import '../utils/application.dart';
 import '../utils/utils.dart';
 import 'daily_picker.dart';
@@ -18,15 +19,15 @@ class ContextFooterWidget extends StatefulWidget {
       required this.currentDate,
       required this.viewType,
       required this.onAdd,
-      required this.workingSlotsList})
+      required this.timeSlotList})
       : super(key: key);
 
   final double height;
   final double width;
   DateTime currentDate;
-  WorkingSlotsList workingSlotsList;
+  TimeSlotList timeSlotList;
   int viewType;
-  final Function(WorkingSlot ws) onAdd;
+  final Function(TimeSlot timeSlot) onAdd;
 
   @override
   _ContextFooterWidget createState() => _ContextFooterWidget();
@@ -38,7 +39,7 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
   bool _isWorking = false;
   @override
   Widget build(BuildContext context) {
-    int minutes = widget.workingSlotsList.sumMinutes();
+    int minutes = widget.timeSlotList.minutes;
 
     Application.instance.isWorking().then((value) {
       setState(() {
@@ -104,7 +105,7 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                     ),
                     onPressed: () {
-                      widget.onAdd(WorkingSlot.create(
+                      widget.onAdd(TimeSlot.create(
                           widget.currentDate,
                           TimeOfDay(
                               hour: DateTime.now().hour,

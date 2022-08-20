@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../business/working_slot.dart';
+import 'package:timekeeperv2/business/time_slot.dart';
+
 import 'package:timekeeperv2/utils/date_extensions.dart';
 
 class Application {
@@ -24,24 +25,25 @@ class Application {
   static final Application instance = Application._privateConstructor();
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
-  WorkingSlotsList? _workingSlotsList;
-  WorkingSlotsList getWorkingSlotsList() {
-    if (_workingSlotsList == null) {
-      _workingSlotsList = WorkingSlotsList();
-      _workingSlotsList!.loadData();
+/*
+  TimeSlotList? _timeSlotList;
+  TimeSlotList get__TimeSlotList() {
+    if (_timeSlotList == null) {
+      _timeSlotList = TimeSlotList();
+      _timeSlotList!.loadData();
     }
-    return _workingSlotsList ?? WorkingSlotsList();
+    return _timeSlotList ?? TimeSlotList();
   }
-
+*/
   Future<SharedPreferences> get sharedPreferences {
     return _prefs;
   }
 
+/*
   refreshWorkingSlotsList() {
     _workingSlotsList = new WorkingSlotsList();
   }
-
+*/
   DateTime? _currentDate;
   DateTime getCurrentDate() {
     return _currentDate ?? DateTime.now();
@@ -58,15 +60,14 @@ class Application {
         value.setString("START_WORKING", _startWorking!.toIso8601String()));
   }
 
-  Future<WorkingSlot?> endWorking() async {
+  Future<TimeSlot?> endWorking() async {
     if (_startWorking != null) {
       DateTime endWorking = DateTime.now();
       if (!endWorking.isSameDateAs(_startWorking)) {
         endWorking = DateTime(_startWorking!.year, _startWorking!.month,
             _startWorking!.day, 23, 59);
       }
-      WorkingSlot ws = WorkingSlot(
-          0,
+      TimeSlot ws = TimeSlot.create(
           _startWorking!,
           TimeOfDay(hour: _startWorking!.hour, minute: _startWorking!.minute),
           TimeOfDay(hour: endWorking.hour, minute: endWorking.minute),

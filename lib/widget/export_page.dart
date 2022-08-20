@@ -5,7 +5,7 @@ import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:timekeeperv2/widget/dropdown_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
-import '../business/working_slot.dart';
+import '../business/time_slot.dart';
 
 class ExportPage extends StatefulWidget {
   const ExportPage({Key? key}) : super(key: key);
@@ -125,11 +125,13 @@ class _ExportPageState extends State<ExportPage> {
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
   }
 
-  late WorkingSlotsList _wsl;
-  void changeDate(DateTime dt) {
-    _wsl = Application.instance
-        .getWorkingSlotsList()
-        .perYearMonth(dt.year, dt.month);
+  late TimeSlotList _timeSlotList;
+  void changeDate(DateTime dt) async {
+    TimeSlotHelper().perYearMonth(dt.year, dt.month).then((value) {
+      setState(() {
+        _timeSlotList = value;
+      });
+    });
   }
 
   @override
@@ -171,7 +173,7 @@ class _ExportPageState extends State<ExportPage> {
                       ),
                       TextButton(
                           onPressed: () {
-                            _onShare(context, _wsl.csv(), "Test CSV");
+                            _onShare(context, _timeSlotList.csv(), "Test CSV");
                             print("Export");
                           },
                           child: Text("Export"))
