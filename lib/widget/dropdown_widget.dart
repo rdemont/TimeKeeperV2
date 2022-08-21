@@ -32,7 +32,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text('Which month you want to export :  '),
         DropdownButton<String>(
           value: defaultValue,
           items: widget.items,

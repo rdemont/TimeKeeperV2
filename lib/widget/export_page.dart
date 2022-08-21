@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
+import 'package:timekeeperv2/utils/utils.dart';
+import 'package:timekeeperv2/widget/base_page.dart';
 import 'package:timekeeperv2/widget/dropdown_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 import '../business/time_slot.dart';
 
-class ExportPage extends StatefulWidget {
+class ExportPage extends BasePage {
   const ExportPage({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -20,11 +22,11 @@ class ExportPage extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<ExportPage> createState() => _ExportPageState();
+  BaseState<ExportPage> createState() => _ExportPageState();
 }
 
-class _ExportPageState extends State<ExportPage> {
-  String _title = "Export";
+class _ExportPageState extends BaseState<ExportPage> {
+  String _title = "XX";
   bool _btnDailyVisible = false;
   bool _btnWeeklyVisible = false;
   bool _btnMonthlyVisible = false;
@@ -47,7 +49,7 @@ class _ExportPageState extends State<ExportPage> {
 
     _screenToolsBar = 60;
     _screenContextHeader = 0;
-    _screenContextFooter = 80;
+    _screenContextFooter = 0;
     _screenContextMain = _screenHeight -
         _screenTopStatusBar -
         _screenBottomStatusBar -
@@ -80,23 +82,8 @@ class _ExportPageState extends State<ExportPage> {
         .firstDayOfTheMonth;
     //_ddMonthValue = dt.formated("yyyyMM");
     changeDate(dt);
-    initDropDownList();
   }
 
-/*
-  List<DropdownMenuItem<String>> _ddMonth = [];
-  initDropDownList() {
-    _ddMonth.clear();
-    DateTime dt = DateTime.now().firstDayOfTheMonth;
-    for (int i = 0; i < 13; i++) {
-      _ddMonth.add(DropdownMenuItem(
-        value: dt.formated("yyyyMM"),
-        child: Text(dt.formated("MMMM yyyy")),
-      ));
-      dt = dt.add(Duration(days: -1)).firstDayOfTheMonth;
-    }
-  }
-*/
   int _currentIndex = 1;
   List<DropdownMenuItem<String>> _ddMonth = [];
   void initDropDownList() {
@@ -105,7 +92,7 @@ class _ExportPageState extends State<ExportPage> {
     for (int i = 0; i < 13; i++) {
       _ddMonth.add(DropdownMenuItem(
         value: dt.formated("yyyyMM"),
-        child: Text(dt.formated("MMMM yyyy")),
+        child: Text("${dt.MonthName(context)} ${dt.formated("yyyy")}"),
       ));
       dt = dt.add(Duration(days: -1)).firstDayOfTheMonth;
     }
@@ -137,12 +124,12 @@ class _ExportPageState extends State<ExportPage> {
   @override
   Widget build(BuildContext context) {
     initScreenSize();
-
+    initDropDownList();
+    double _width = _screenWidth;
+    _title = AppLocalizations.of(context)!.title_export;
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: _screenToolsBar,
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
           title: Text(_title),
         ),
         body: Column(
@@ -155,28 +142,88 @@ class _ExportPageState extends State<ExportPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      DropDownWidget(
-                        items: _ddMonth,
-                        defaultIndex: _currentIndex,
-                        onChange: (index) {
-                          setState(() {
-                            DateTime dt = DateTime(
-                                int.parse(
-                                    _ddMonth[index].value!.substring(0, 4)),
-                                int.parse(
-                                    _ddMonth[index].value!.substring(4, 6)),
-                                1);
-                            changeDate(dt);
-                            //print(_ddMonthValue);
-                          });
-                        },
+                      Container(
+                        alignment: Alignment.center,
+                        color: Colors.white,
+                        width: _width,
+                        padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                        child: Text('Which month you want to export',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.black)),
                       ),
-                      TextButton(
-                          onPressed: () {
-                            _onShare(context, _timeSlotList.csv(), "Test CSV");
-                            print("Export");
-                          },
-                          child: Text("Export"))
+                      Container(
+                          color: Colors.white,
+                          width: _width,
+                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: DropDownWidget(
+                            items: _ddMonth,
+                            defaultIndex: _currentIndex,
+                            onChange: (index) {
+                              setState(() {
+                                DateTime dt = DateTime(
+                                    int.parse(
+                                        _ddMonth[index].value!.substring(0, 4)),
+                                    int.parse(
+                                        _ddMonth[index].value!.substring(4, 6)),
+                                    1);
+                                changeDate(dt);
+                                _currentIndex = index;
+                              });
+                            },
+                          )),
+                      Container(
+                          color: Colors.white,
+                          padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                          width: _width,
+                          child: Container(
+                              padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                              child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.blue.shade900,
+                                    shape: const BeveledRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                  ),
+                                  onPressed: () {
+                                    _onShare(context, _timeSlotList.csv(),
+                                        "${_ddMonth[_currentIndex]} CSV");
+                                    //print("Export");
+                                  },
+                                  child: Text(
+                                      AppLocalizations.of(context)!.export,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: Colors.white))))),
+                      Container(height: 10),
+                      Container(
+                          color: Colors.white,
+                          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                          width: _width,
+                          child: Container(
+                              padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                              child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.blue.shade900,
+                                    shape: const BeveledRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                  ),
+                                  onPressed: () {
+                                    TimeSlotHelper().allRecord().then((value) {
+                                      _onShare(context, value.csv(),
+                                          "${AppLocalizations.of(context)!.export_all} CSV");
+                                    });
+                                    //print("Export");
+                                  },
+                                  child: Text(
+                                      AppLocalizations.of(context)!.export_all,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: Colors.white))))),
                     ])),
             Container(
                 height: _screenContextFooter,

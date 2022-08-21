@@ -5,13 +5,14 @@ import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:timekeeperv2/widget/base_page.dart';
 
 import '../business/time_slot.dart';
 import '../utils/utils.dart';
 import 'daily_picker.dart';
 import 'main_page.dart';
 
-class ContextMainWidget extends StatefulWidget {
+class ContextMainWidget extends BasePage {
   ContextMainWidget(
       {Key? key,
       required this.height,
@@ -64,9 +65,10 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                              title: const Text("Alert Dialog Box"),
-                              content: const Text(
-                                  "Do you wich to delete this working time ? "),
+                              title: Text(AppLocalizations.of(context)!
+                                  .title_box_delete),
+                              content: Text(AppLocalizations.of(context)!
+                                  .message_box_delete),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {
@@ -76,7 +78,8 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                                   child: Container(
                                     color: Colors.grey,
                                     padding: const EdgeInsets.all(14),
-                                    child: const Text("ok"),
+                                    child:
+                                        Text(AppLocalizations.of(context)!.ok),
                                   ),
                                 ),
                                 TextButton(
@@ -86,7 +89,8 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                                   child: Container(
                                     color: Colors.grey,
                                     padding: const EdgeInsets.all(14),
-                                    child: const Text("cancel"),
+                                    child: Text(
+                                        AppLocalizations.of(context)!.cancel),
                                   ),
                                 ),
                               ],
@@ -95,7 +99,7 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
                   icon: Icons.delete,
-                  label: 'Delete',
+                  label: AppLocalizations.of(context)!.delete,
                 ),
               ]),
               child: Card(
@@ -105,8 +109,8 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text("From : "),
-                      Text("To : "),
+                      Text("${AppLocalizations.of(context)!.from} : "),
+                      Text("${AppLocalizations.of(context)!.to} : "),
                     ],
                   ),
                   Column(children: [
@@ -122,8 +126,10 @@ class _ContextMainWidget extends State<ContextMainWidget> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text("Total in minuts : "),
-                      Text("Total in decimal : "),
+                      Text(
+                          "${AppLocalizations.of(context)!.total_in_minutes} : "),
+                      Text(
+                          "${AppLocalizations.of(context)!.total_in_decimals} : "),
                     ],
                   ),
                   Column(
@@ -170,13 +176,17 @@ class _ContextMainWidget extends State<ContextMainWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(dayMinutes > 0 ? "In hour and Minutes : " : ""),
+                  Text(dayMinutes > 0
+                      ? "${AppLocalizations.of(context)!.hours_minutes_long} : "
+                      : ""),
                   Text(
                       "${Utils.instance.humainReadableMinutesPerHour(dayMinutes)}")
                 ],
               ),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(dayMinutes > 0 ? "In hour and decimal : " : ""),
+                Text(dayMinutes > 0
+                    ? "${AppLocalizations.of(context)!.hours_decimals_long} : "
+                    : ""),
                 Text(
                     "${Utils.instance.humainReadableDecimalPerHour(dayMinutes)}")
               ])
@@ -227,26 +237,26 @@ class _ContextMainWidget extends State<ContextMainWidget> {
     Color fontColor = Colors.black;
     switch (index) {
       case 0:
-        str = "Mo";
+        str = AppLocalizations.of(context)!.monday_short;
         break;
       case 1:
-        str = "Tu";
+        str = AppLocalizations.of(context)!.tuesday_short;
         break;
       case 2:
-        str = "We";
+        str = AppLocalizations.of(context)!.wednesday_short;
         break;
       case 3:
-        str = "Th";
+        str = AppLocalizations.of(context)!.thursday_short;
         break;
       case 4:
-        str = "Fr";
+        str = AppLocalizations.of(context)!.friday_short;
         break;
       case 5:
-        str = "Sa";
+        str = AppLocalizations.of(context)!.saturday_short;
         fontColor = Colors.white;
         break;
       case 6:
-        str = "Su";
+        str = AppLocalizations.of(context)!.sunday_short;
         fontColor = Colors.white;
         break;
     }
@@ -262,7 +272,11 @@ class _ContextMainWidget extends State<ContextMainWidget> {
 
   Widget monthCreateWeekTotal(
       int index, DateTime dt, int firstWeek, List weekMinutes) {
-    int minutes = weekMinutes[dt.weekOfYear - firstWeek];
+    int weekIndex = dt.weekOfYear - firstWeek;
+    if (weekIndex < 0) {
+      weekIndex = firstWeek + dt.weekOfYear - 52;
+    }
+    int minutes = weekMinutes[weekIndex];
     return GestureDetector(
         onTap: () {
           widget.onChange(dt, ViewType.VIEW_TYPE_WEEKLY);
@@ -274,7 +288,7 @@ class _ContextMainWidget extends State<ContextMainWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "week ${dt.weekOfYear}",
+                  "${AppLocalizations.of(context)!.week_short} ${dt.weekOfYear}",
                   style: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
@@ -329,6 +343,7 @@ class _ContextMainWidget extends State<ContextMainWidget> {
   List createMonth(DateTime dateTime) {
     List monthItem = [];
     List weeksMinutes = List<int>.filled(5, 0);
+    //int weekInMonth = 0;
     int firstWeek = widget.currentDate.firstDayOfTheMonthView.weekOfYear;
 
     DateTime dt = widget.currentDate.firstDayOfTheMonthView;
@@ -347,8 +362,12 @@ class _ContextMainWidget extends State<ContextMainWidget> {
           int minutes = widget.timeSlotList.minutesForDay(dt);
 
           //    widget.timeSlotList.perDate(dt.year, dt.month, dt.day).minutes;
+          int weekIndex = dt.weekOfYear - firstWeek;
+          if (weekIndex < 0) {
+            weekIndex = firstWeek + dt.weekOfYear - 52;
+          }
 
-          weeksMinutes[dt.weekOfYear - firstWeek] += minutes;
+          weeksMinutes[weekIndex] += minutes;
           monthItem.add(monthCreateDay(dt, firstWeek, minutes));
           if (((i + 1) % 6) == 0) {
             dtNext = dtNext.add(Duration(days: 1));

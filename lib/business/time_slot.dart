@@ -201,6 +201,16 @@ class TimeSlotHelper {
     });
   }
 
+  Future<TimeSlotList> allRecord() {
+    TimeSlotList result = TimeSlotList();
+    //result.removeAll();
+    return _box.then((value) {
+      _items.forEach((element) => result.add(element));
+      result.sortAsc();
+      return result;
+    });
+  }
+
   Future<TimeSlotList> perDateInterval(DateTime fromDt, DateTime toDt) {
     TimeSlotList result = TimeSlotList();
     //result.removeAll();

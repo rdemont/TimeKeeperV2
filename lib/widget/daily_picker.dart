@@ -133,11 +133,11 @@ class _DailyPickerState extends State<DailyPicker> {
                           duration: Duration(milliseconds: 500),
                           curve: Curves.easeIn);
 
-                      Application.instance.setCurrentDate(DateTime.now());
+                      //Application.instance.setCurrentDate(DateTime.now());
                       widget.changeDay(DateTime.now());
                     });
                   },
-                  child: const Text("Today",
+                  child: Text(AppLocalizations.of(context)!.today,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,

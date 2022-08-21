@@ -53,10 +53,12 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
         padding: EdgeInsets.fromLTRB(2, 0, 0, 0),
         child: Align(
             alignment: AlignmentDirectional.centerStart,
-            child: Text("HMin:" +
-                Utils.instance.humainReadableMinutesPerHour(minutes) +
-                "\nHDec:" +
-                Utils.instance.humainReadableDecimalPerHour(minutes))),
+            child: Column(children: [
+              Text(AppLocalizations.of(context)!.hours_minutes_short),
+              Text(Utils.instance.humainReadableMinutesPerHour(minutes)),
+              Text(AppLocalizations.of(context)!.hours_minutes_short),
+              Text(Utils.instance.humainReadableDecimalPerHour(minutes))
+            ])),
       ),
       Container(
           width: (widget.width / 3) + 40,
@@ -86,7 +88,10 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
                           });
                         });
                       },
-                      child: Text(_isWorking ? 'Is Working' : 'Start working',
+                      child: Text(
+                          _isWorking
+                              ? AppLocalizations.of(context)!.stop_working
+                              : AppLocalizations.of(context)!.start_working,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 25,
@@ -115,7 +120,7 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
                               minute: DateTime.now().minute),
                           ""));
                     },
-                    child: Text("add time",
+                    child: Text(AppLocalizations.of(context)!.add_time,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,

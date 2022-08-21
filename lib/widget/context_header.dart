@@ -37,6 +37,7 @@ class _ContextHeaderWidget extends State<ContextHeaderWidget> {
             widget.changeDate(value);
           });
         },
+        weekdayText: AppLocalizations.of(context)!.week,
         enableWeeknumberText: true,
         weeknumberColor: Colors.blue,
         weeknumberTextColor: Colors.white,
@@ -45,7 +46,15 @@ class _ContextHeaderWidget extends State<ContextHeaderWidget> {
         digitsColor: Colors.white,
         selectedBackgroundColor: Colors.white,
         selectedDigitColor: Colors.black,
-        weekdays: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+        weekdays: [
+          AppLocalizations.of(context)!.monday_short,
+          AppLocalizations.of(context)!.tuesday_short,
+          AppLocalizations.of(context)!.wednesday_short,
+          AppLocalizations.of(context)!.thursday_short,
+          AppLocalizations.of(context)!.friday_short,
+          AppLocalizations.of(context)!.saturday_short,
+          AppLocalizations.of(context)!.sunday_short
+        ],
         daysInWeek: 7);
   }
 
@@ -78,22 +87,24 @@ class _ContextHeaderWidget extends State<ContextHeaderWidget> {
         child: Row(
           children: [
             TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.blue.shade900,
-                shape: const BeveledRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-              ),
-              onPressed: () {
-                setState(() {
-                  widget.changeDate(DateTime.now());
-                });
-              },
-              child: const Text("Today",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white)),
-            ),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blue.shade900,
+                  shape: const BeveledRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                ),
+                onPressed: () {
+                  setState(() {
+                    widget.changeDate(DateTime.now());
+                  });
+                },
+                child: Container(
+                  width: 70,
+                  child: Text(AppLocalizations.of(context)!.today,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white)),
+                )),
             Container(
               width: 20,
             ),
@@ -102,7 +113,8 @@ class _ContextHeaderWidget extends State<ContextHeaderWidget> {
                 Container(
                   height: 10,
                 ),
-                Text("Week $_weekNumber / $_yearNumber",
+                Text(
+                    "${AppLocalizations.of(context)!.week_short} $_weekNumber / $_yearNumber",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
@@ -119,8 +131,8 @@ class _ContextHeaderWidget extends State<ContextHeaderWidget> {
   }
 
   Widget getMonthly() {
-    String _monthTitle =
-        "${Utils.instance.MonthName(widget.currentDate)} / ${widget.currentDate.year}";
+    String _monthTitle = "${Utils.instance.MonthName(widget.currentDate)} ";
+    String _yearTitle = "${widget.currentDate.year}";
     return Dismissible(
         key: Key("${_monthTitle}"),
         resizeDuration: null,
@@ -133,7 +145,7 @@ class _ContextHeaderWidget extends State<ContextHeaderWidget> {
               widget.changeDate(widget.currentDate);
             } else {
               widget.currentDate = DateTime(widget.currentDate.year,
-                  widget.currentDate.month + 1, widget.currentDate.day);
+                  widget.currentDate.month - 1, widget.currentDate.day);
               widget.changeDate(widget.currentDate);
             }
           });
@@ -153,7 +165,7 @@ class _ContextHeaderWidget extends State<ContextHeaderWidget> {
                       widget.changeDate(DateTime.now());
                     });
                   },
-                  child: const Text("Today",
+                  child: Text(AppLocalizations.of(context)!.today,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -165,15 +177,15 @@ class _ContextHeaderWidget extends State<ContextHeaderWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(_monthTitle,
+                    Text(_yearTitle,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
                             color: Colors.white)),
-                    Text("TBD",
+                    Text(_monthTitle,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            fontSize: 30,
                             color: Colors.white)),
                   ],
                 ))

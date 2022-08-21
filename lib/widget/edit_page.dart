@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:timekeeperv2/widget/base_page.dart';
 import '../business/time_slot.dart';
 import '../utils/time_of_day_extensions.dart';
 
@@ -9,7 +10,7 @@ import 'time_spinner_widget.dart';
 
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
 
-class EditPage extends StatefulWidget {
+class EditPage extends BasePage {
   const EditPage({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -22,11 +23,11 @@ class EditPage extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<EditPage> createState() => _EditPageState();
+  BaseState<EditPage> createState() => _EditPageState();
 }
 
-class _EditPageState extends State<EditPage> {
-  String _title = "Edit";
+class _EditPageState extends BaseState<EditPage> {
+  String _title = "XX";
   bool _btnDailyVisible = false;
   bool _btnWeeklyVisible = false;
   bool _btnMonthlyVisible = false;

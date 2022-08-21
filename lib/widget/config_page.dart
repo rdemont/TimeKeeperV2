@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:timekeeperv2/widget/base_page.dart';
 
-class ConfigPage extends StatefulWidget {
+class ConfigPage extends BasePage {
   const ConfigPage({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -15,10 +16,10 @@ class ConfigPage extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<ConfigPage> createState() => _ConfigPageState();
+  BaseState<ConfigPage> createState() => _ConfigPageState();
 }
 
-class _ConfigPageState extends State<ConfigPage> {
+class _ConfigPageState extends BaseState<ConfigPage> {
   String _title = "XX";
   bool _btnDailyVisible = false;
   bool _btnWeeklyVisible = false;
@@ -41,8 +42,8 @@ class _ConfigPageState extends State<ConfigPage> {
     _screenBottomStatusBar = MediaQuery.of(context).viewPadding.bottom;
 
     _screenToolsBar = 60;
-    _screenContextHeader = 100;
-    _screenContextFooter = 80;
+    _screenContextHeader = 0;
+    _screenContextFooter = 0;
     _screenContextMain = _screenHeight -
         _screenTopStatusBar -
         _screenBottomStatusBar -
@@ -69,13 +70,13 @@ class _ConfigPageState extends State<ConfigPage> {
   @override
   void initState() {
     super.initState();
-    _title = AppLocalizations.of(context)!.title_settings;
+    //_title = AppLocalizations.of(context)!.title_settings;
   }
 
   @override
   Widget build(BuildContext context) {
     initScreenSize();
-
+    _title = AppLocalizations.of(context)!.title_settings;
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: _screenToolsBar,
@@ -91,10 +92,28 @@ class _ConfigPageState extends State<ConfigPage> {
                 color: Colors.blue,
                 child: Text("Top")),
             Container(
-                height: _screenContextMain,
-                width: _screenWidth,
-                color: Colors.grey,
-                child: Text("MAIN")),
+              height: _screenContextMain,
+              width: _screenWidth,
+              color: Colors.grey,
+              child: Center(
+                  child: DropdownButton(
+                icon: Icon(Icons.language),
+                items: [
+                  DropdownMenuItem(
+                    value: Locale('en'),
+                    child: Text('English'),
+                  ),
+                  DropdownMenuItem(
+                    value: Locale('fr'),
+                    child: Text("Français"),
+                  ),
+                ],
+                onChanged: (v) => setState(() {
+                  setLocale(v as Locale);
+                }),
+                value: getLocale(),
+              )),
+            ),
             Container(
                 height: _screenContextFooter,
                 width: _screenWidth,

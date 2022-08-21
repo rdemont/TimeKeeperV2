@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 extension DateWeekExtensions on DateTime {
@@ -93,5 +93,65 @@ extension DateWeekExtensions on DateTime {
 
   TimeOfDay get timeOfDay {
     return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  String MonthNameShort(BuildContext context) {
+    switch (month) {
+      case 1:
+        return AppLocalizations.of(context)!.january_short;
+      case 2:
+        return AppLocalizations.of(context)!.february_short;
+      case 3:
+        return AppLocalizations.of(context)!.march_short;
+      case 4:
+        return AppLocalizations.of(context)!.april_short;
+      case 5:
+        return AppLocalizations.of(context)!.may_short;
+      case 6:
+        return AppLocalizations.of(context)!.june_short;
+      case 7:
+        return AppLocalizations.of(context)!.july_short;
+      case 8:
+        return AppLocalizations.of(context)!.august_short;
+      case 9:
+        return AppLocalizations.of(context)!.september_short;
+      case 10:
+        return AppLocalizations.of(context)!.october_short;
+      case 11:
+        return AppLocalizations.of(context)!.november_short;
+      case 12:
+        return AppLocalizations.of(context)!.december_short;
+    }
+    return "NDEF";
+  }
+
+  String MonthName(BuildContext context) {
+    switch (month) {
+      case 1:
+        return AppLocalizations.of(context)!.january_long;
+      case 2:
+        return AppLocalizations.of(context)!.february_long;
+      case 3:
+        return AppLocalizations.of(context)!.march_long;
+      case 4:
+        return AppLocalizations.of(context)!.april_long;
+      case 5:
+        return AppLocalizations.of(context)!.may_long;
+      case 6:
+        return AppLocalizations.of(context)!.june_long;
+      case 7:
+        return AppLocalizations.of(context)!.july_long;
+      case 8:
+        return AppLocalizations.of(context)!.august_long;
+      case 9:
+        return AppLocalizations.of(context)!.september_long;
+      case 10:
+        return AppLocalizations.of(context)!.october_long;
+      case 11:
+        return AppLocalizations.of(context)!.november_long;
+      case 12:
+        return AppLocalizations.of(context)!.december_long;
+    }
+    return "NDEF";
   }
 }

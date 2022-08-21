@@ -8,7 +8,9 @@ import 'package:timekeeperv2/widget/context_main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../main.dart';
+import 'base_app.dart';
 import 'context_header.dart';
+import 'base_page.dart';
 
 class ViewType {
   static const int VIEW_TYPE_DAILY = 1;
@@ -16,7 +18,7 @@ class ViewType {
   static const int VIEW_TYPE_MONTHLY = 4;
 }
 
-class MainPage extends StatefulWidget {
+class MainPage extends BasePage {
   const MainPage({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -29,10 +31,10 @@ class MainPage extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  BaseState<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends BaseState<MainPage> {
   String _title = "XX";
 
   bool _btnDailyVisible = false;
