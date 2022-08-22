@@ -130,7 +130,7 @@ class Utils {
     }
     return "unknow";
   }
-
+/*
   String dayOftheWeekLong(DateTime dt) {
     switch (dt.weekday) {
       case DateTime.monday:
@@ -150,4 +150,5 @@ class Utils {
     }
     return "unknow";
   }
+*/
 }

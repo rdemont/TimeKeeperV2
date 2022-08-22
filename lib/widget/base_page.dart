@@ -22,8 +22,4 @@ abstract class BaseState<T extends BasePage> extends State {
   Locale? getLocale() {
     return BaseApp.of(context)!.getLocale();
   }
-
-  AppLocalizations? translate() {
-    return AppLocalizations.of(context);
-  }
 }

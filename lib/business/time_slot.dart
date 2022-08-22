@@ -65,7 +65,9 @@ class TimeSlot extends HiveObject with Comparable {
   }
 
   int get minutes {
-    return int.parse(ISOEndTime) - int.parse(ISOStartTime);
+    return ((endTime.hour * 60) + endTime.minute) -
+        ((startTime.hour * 60) + startTime.minute);
+    //return int.parse(ISOEndTime) - int.parse(ISOStartTime);
   }
 
   @override

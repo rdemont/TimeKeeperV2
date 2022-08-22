@@ -154,4 +154,44 @@ extension DateWeekExtensions on DateTime {
     }
     return "NDEF";
   }
+
+  String dayName(BuildContext context) {
+    switch (weekday) {
+      case DateTime.monday:
+        return AppLocalizations.of(context)!.monday_long;
+      case DateTime.tuesday:
+        return AppLocalizations.of(context)!.tuesday_long;
+      case DateTime.wednesday:
+        return AppLocalizations.of(context)!.wednesday_long;
+      case DateTime.thursday:
+        return AppLocalizations.of(context)!.thursday_long;
+      case DateTime.friday:
+        return AppLocalizations.of(context)!.friday_long;
+      case DateTime.saturday:
+        return AppLocalizations.of(context)!.saturday_long;
+      case DateTime.sunday:
+        return AppLocalizations.of(context)!.sunday_long;
+    }
+    return "NDEF";
+  }
+
+  String dayNameShort(BuildContext context) {
+    switch (weekday) {
+      case DateTime.monday:
+        return AppLocalizations.of(context)!.monday_short;
+      case DateTime.tuesday:
+        return AppLocalizations.of(context)!.tuesday_short;
+      case DateTime.wednesday:
+        return AppLocalizations.of(context)!.wednesday_short;
+      case DateTime.thursday:
+        return AppLocalizations.of(context)!.thursday_short;
+      case DateTime.friday:
+        return AppLocalizations.of(context)!.friday_short;
+      case DateTime.saturday:
+        return AppLocalizations.of(context)!.saturday_short;
+      case DateTime.sunday:
+        return AppLocalizations.of(context)!.sunday_short;
+    }
+    return "NDEF";
+  }
 }

@@ -100,9 +100,9 @@ class _MainPageState extends BaseState<MainPage> {
     switch (_viewType) {
       case ViewType.VIEW_TYPE_DAILY:
         TimeSlotHelper().perDate(dt.year, dt.month, dt.day).then((value) {
-          setState(() {
-            _timeSlotList = value;
-          });
+          //setState(() {
+          _timeSlotList = value;
+          //});
         });
         _btnDailyVisible = false;
         _btnWeeklyVisible = true;

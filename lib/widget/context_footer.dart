@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'package:timekeeperv2/main.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
@@ -42,9 +43,11 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
     int minutes = widget.timeSlotList.minutes;
 
     Application.instance.isWorking().then((value) {
-      setState(() {
-        _isWorking = value;
-      });
+      if (_isWorking != value) {
+        setState(() {
+          _isWorking = value;
+        });
+      }
     });
 
     return Row(children: [
@@ -53,12 +56,57 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
         padding: EdgeInsets.fromLTRB(2, 0, 0, 0),
         child: Align(
             alignment: AlignmentDirectional.centerStart,
-            child: Column(children: [
-              Text(AppLocalizations.of(context)!.hours_minutes_short),
-              Text(Utils.instance.humainReadableMinutesPerHour(minutes)),
-              Text(AppLocalizations.of(context)!.hours_minutes_short),
-              Text(Utils.instance.humainReadableDecimalPerHour(minutes))
-            ])),
+            child: minutes > 0
+                ? Container(
+                    padding: EdgeInsets.fromLTRB(10, 5, 5, 0),
+                    alignment: AlignmentDirectional.topStart,
+                    width: (widget.width / 3) - 40,
+                    child: Column(children: [
+                      Container(
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          color: Colors.white,
+                          width: (widget.width / 3) - 40,
+                          child: Text(
+                              AppLocalizations.of(context)!.hours_minutes_short,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 10,
+                                  color: Colors.black))),
+                      Container(
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          color: Colors.white,
+                          width: (widget.width / 3) - 40,
+                          child: Text(
+                              Utils.instance
+                                  .humainReadableMinutesPerHour(minutes),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.black))),
+                      Container(height: 10),
+                      Container(
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          color: Colors.white,
+                          width: (widget.width / 3) - 40,
+                          child: Text(
+                              AppLocalizations.of(context)!.hours_minutes_short,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 10,
+                                  color: Colors.black))),
+                      Container(
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          color: Colors.white,
+                          width: (widget.width / 3) - 40,
+                          child: Text(
+                              Utils.instance
+                                  .humainReadableDecimalPerHour(minutes),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.black)))
+                    ]))
+                : null),
       ),
       Container(
           width: (widget.width / 3) + 40,
