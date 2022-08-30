@@ -130,25 +130,4 @@ class Utils {
     }
     return "unknow";
   }
-/*
-  String dayOftheWeekLong(DateTime dt) {
-    switch (dt.weekday) {
-      case DateTime.monday:
-        return "Monday";
-      case DateTime.tuesday:
-        return "Tuesday";
-      case DateTime.wednesday:
-        return "Wednesday";
-      case DateTime.thursday:
-        return "Thursday";
-      case DateTime.friday:
-        return "Friday";
-      case DateTime.saturday:
-        return "Saterday";
-      case DateTime.sunday:
-        return "Sunday";
-    }
-    return "unknow";
-  }
-*/
 }

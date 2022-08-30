@@ -167,7 +167,7 @@ class _ContextMainWidget extends State<ContextMainWidget> {
             alignment: AlignmentDirectional.centerStart,
             padding: EdgeInsets.fromLTRB(10, 5, 50, 5),
             child: Column(children: [
-              Text("${dt.dayName(context)} ${dt.day} ${dt.formated("MMMM")} ",
+              Text("${dt.dayName(context)} ${dt.day} ${dt.MonthName(context)} ",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,

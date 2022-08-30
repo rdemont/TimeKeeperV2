@@ -77,6 +77,7 @@ class _EditPageState extends BaseState<EditPage> {
   }
 
   bool _isInited = false;
+  int _minutesStep = 15;
   void initParameter() {
     if (!_isInited) {
       _isInited = true;
@@ -91,6 +92,12 @@ class _EditPageState extends BaseState<EditPage> {
       } else {
         Navigator.pop(context);
       }
+
+      Application.instance.stepHour.then((value) {
+        setState(() {
+          _minutesStep = value;
+        });
+      });
     }
   }
 
@@ -248,6 +255,7 @@ class _EditPageState extends BaseState<EditPage> {
                           use24hFormat: true,
                           selectedValue: _timeSlot.startTime,
                           hiddenSlot: _hiddenSpotFrom,
+                          minutesStep: _minutesStep,
                           onSetTime: (value) {
                             _timeSlot.startTime = value;
                             hiddenSpotTo(value);
@@ -276,6 +284,7 @@ class _EditPageState extends BaseState<EditPage> {
                           minimumTime: TimeOfDay(hour: 0, minute: 0),
                           maximumTime: TimeOfDay(hour: 23, minute: 59),
                           use24hFormat: true,
+                          minutesStep: _minutesStep,
                           selectedValue:
                               _timeSlot.endTime ?? _timeSlot.startTime,
                           hiddenSlot: _hiddenSpotTo,

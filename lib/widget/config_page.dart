@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/widget/base_page.dart';
+
+import '../utils/utils.dart';
+import 'title_box_widget.dart';
 
 class ConfigPage extends BasePage {
   const ConfigPage({Key? key}) : super(key: key);
@@ -34,6 +40,8 @@ class _ConfigPageState extends BaseState<ConfigPage> {
   double _screenContextHeader = 0;
   double _screenContextFooter = 0;
   double _screenContextMain = 0;
+
+  double _columnLeft = 200;
 
   void initScreenSize() {
     _screenWidth = MediaQuery.of(context).size.width;
@@ -73,11 +81,98 @@ class _ConfigPageState extends BaseState<ConfigPage> {
     //_title = AppLocalizations.of(context)!.title_settings;
   }
 
+  int _stepHour = 15;
+  void setStepHour(int stepHour) {
+    if (_stepHour != stepHour) {
+      setState(() {
+        _stepHour = stepHour;
+      });
+      Application.instance.setStepHour(_stepHour);
+    }
+  }
+
+  bool _isMonday = true;
+  bool _isTuesday = true;
+  bool _isWednesday = true;
+  bool _isThursday = true;
+  bool _isFriday = true;
+  bool _isSaterday = true;
+  bool _isSunday = true;
+  void setWorkingDays() {
+    Application.instance.setWorkingDays(_isMonday, _isTuesday, _isWednesday,
+        _isThursday, _isFriday, _isSaterday, _isSunday);
+  }
+
+  void loadData() {
+    Application.instance.stepHour.then((value) {
+      if (value != _stepHour) {
+        setState(() {
+          _stepHour = value;
+        });
+      }
+    });
+
+    Application.instance.workingDayMonday.then((value) {
+      if (_isMonday != value) {
+        setState(() {
+          _isMonday = value;
+        });
+      }
+    });
+    Application.instance.workingDayTuesday.then((value) {
+      if (_isTuesday != value) {
+        setState(() {
+          _isTuesday = value;
+        });
+      }
+    });
+    Application.instance.workingDayWedesday.then((value) {
+      if (_isWednesday != value) {
+        setState(() {
+          _isWednesday = value;
+        });
+      }
+    });
+    Application.instance.workingDayThursday.then((value) {
+      if (_isThursday != value) {
+        setState(() {
+          _isThursday = value;
+        });
+      }
+    });
+    Application.instance.workingDayFriday.then((value) {
+      if (_isFriday != value) {
+        setState(() {
+          _isFriday = value;
+        });
+      }
+    });
+    Application.instance.workingDaySaterday.then((value) {
+      if (_isSaterday != value) {
+        setState(() {
+          _isSaterday = value;
+        });
+      }
+    });
+    Application.instance.workingDaySunday.then((value) {
+      if (_isSunday != value) {
+        setState(() {
+          _isSunday = value;
+        });
+      }
+    });
+  }
+
+  TimeFormatter timeFormater =
+      TimeFormatter(TimeFormatter.TIME_FORMATTER_HOURMINUTES);
+
   @override
   Widget build(BuildContext context) {
     initScreenSize();
+    loadData();
     _title = AppLocalizations.of(context)!.title_settings;
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           toolbarHeight: _screenToolsBar,
           // Here we take the value from the MyHomePage object that was created by
@@ -92,28 +187,224 @@ class _ConfigPageState extends BaseState<ConfigPage> {
                 color: Colors.blue,
                 child: Text("Top")),
             Container(
-              height: _screenContextMain,
-              width: _screenWidth,
-              color: Colors.grey,
-              child: Center(
-                  child: DropdownButton(
-                icon: Icon(Icons.language),
-                items: [
-                  DropdownMenuItem(
-                    value: Locale('en'),
-                    child: Text('English'),
+                height: _screenContextMain,
+                width: _screenWidth,
+                color: Colors.grey,
+                child: Column(children: [
+                  TitleBox(
+                      onClickHelp: (p0) {},
+                      title: "Working days",
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                        color: Colors.white,
+                        child: Column(children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ActionChip(
+                                  backgroundColor:
+                                      _isMonday ? Colors.blue : Colors.grey,
+                                  label: Text(AppLocalizations.of(context)!
+                                      .monday_short),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isMonday = !_isMonday;
+                                    });
+                                    setWorkingDays();
+                                  },
+                                ),
+                                SizedBox(width: 10),
+                                ActionChip(
+                                  backgroundColor:
+                                      _isTuesday ? Colors.blue : Colors.grey,
+                                  label: Text(AppLocalizations.of(context)!
+                                      .tuesday_short),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isTuesday = !_isTuesday;
+                                    });
+                                    setWorkingDays();
+                                  },
+                                ),
+                                SizedBox(width: 10),
+                                ActionChip(
+                                  backgroundColor:
+                                      _isWednesday ? Colors.blue : Colors.grey,
+                                  label: Text(AppLocalizations.of(context)!
+                                      .wednesday_short),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isWednesday = !_isWednesday;
+                                    });
+                                    setWorkingDays();
+                                  },
+                                ),
+                                SizedBox(width: 10),
+                                ActionChip(
+                                  backgroundColor:
+                                      _isThursday ? Colors.blue : Colors.grey,
+                                  label: Text(AppLocalizations.of(context)!
+                                      .thursday_short),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isThursday = !_isThursday;
+                                    });
+                                    setWorkingDays();
+                                  },
+                                ),
+                              ]),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ActionChip(
+                                  backgroundColor:
+                                      _isFriday ? Colors.blue : Colors.grey,
+                                  label: Text(AppLocalizations.of(context)!
+                                      .friday_short),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isFriday = !_isFriday;
+                                    });
+                                    setWorkingDays();
+                                  },
+                                ),
+                                SizedBox(width: 10),
+                                ActionChip(
+                                  backgroundColor:
+                                      _isSaterday ? Colors.blue : Colors.grey,
+                                  label: Text(AppLocalizations.of(context)!
+                                      .saturday_short),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isSaterday = !_isSaterday;
+                                    });
+                                    setWorkingDays();
+                                  },
+                                ),
+                                SizedBox(width: 10),
+                                ActionChip(
+                                  backgroundColor:
+                                      _isSunday ? Colors.blue : Colors.grey,
+                                  label: Text(AppLocalizations.of(context)!
+                                      .sunday_short),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isSunday = !_isSunday;
+                                    });
+                                    setWorkingDays();
+                                  },
+                                ),
+                              ])
+                        ]),
+                      )),
+                  SizedBox(
+                    height: 10,
                   ),
-                  DropdownMenuItem(
-                    value: Locale('fr'),
-                    child: Text("Français"),
+                  TitleBox(
+                    title: "Hour per day",
+                    onClickHelp: (p0) {},
+                    child: Container(
+                        child: Row(children: [
+                      Expanded(
+                          child: TextField(
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.datetime,
+                              decoration: InputDecoration(
+                                  hintText: timeFormater.getTemplate()),
+                              inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                                timeFormater.getRegex())
+                          ])),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: DropdownButton(
+                        icon: Icon(Icons.merge_type_outlined),
+                        value: timeFormater.type,
+                        items: const [
+                          DropdownMenuItem(
+                              value: TimeFormatter.TIME_FORMATTER_HOURMINUTES,
+                              child: Text("HH:MM")),
+                          DropdownMenuItem(
+                              value: TimeFormatter.TIME_FORMATTER_DECIMAL,
+                              child: Text("Decimal"))
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            timeFormater.type = value as int;
+                          });
+                        },
+                      ))
+                    ])),
                   ),
-                ],
-                onChanged: (v) => setState(() {
-                  setLocale(v as Locale);
-                }),
-                value: getLocale(),
-              )),
-            ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      width: _screenWidth,
+                      color: Colors.white,
+                      child: Center(
+                          child: DropdownButton(
+                        icon: Icon(Icons.view_timeline_rounded),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 1,
+                            child: Text('1 Minutes'),
+                          ),
+                          DropdownMenuItem(
+                            value: 5,
+                            child: Text("5 Minutes"),
+                          ),
+                          DropdownMenuItem(
+                            value: 10,
+                            child: Text("10 Minutes"),
+                          ),
+                          DropdownMenuItem(
+                            value: 15,
+                            child: Text("15 Minutes"),
+                          ),
+                          DropdownMenuItem(
+                            value: 30,
+                            child: Text("30 Minutes"),
+                          ),
+                          DropdownMenuItem(
+                            value: 60,
+                            child: Text("1 heure"),
+                          ),
+                        ],
+                        onChanged: (v) {
+                          setStepHour(v as int);
+                        },
+                        value: _stepHour,
+                      ))),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      width: _screenWidth,
+                      color: Colors.white,
+                      child: Center(
+                          child: DropdownButton(
+                        icon: Icon(Icons.language),
+                        items: const [
+                          DropdownMenuItem(
+                            value: Locale('en'),
+                            child: Text('English'),
+                          ),
+                          DropdownMenuItem(
+                            value: Locale('fr'),
+                            child: Text("Français"),
+                          ),
+                        ],
+                        onChanged: (v) => setState(() {
+                          setLocale(v as Locale);
+                        }),
+                        value: getLocale(),
+                      ))),
+                ])),
             Container(
                 height: _screenContextFooter,
                 width: _screenWidth,
@@ -121,5 +412,59 @@ class _ConfigPageState extends BaseState<ConfigPage> {
                 child: Text("Footer")),
           ],
         ));
+  }
+}
+
+class TimeFormatter extends TextInputFormatter {
+  static const int TIME_FORMATTER_HOURMINUTES = 1;
+  static const int TIME_FORMATTER_DECIMAL = 2;
+
+  int _type = TIME_FORMATTER_HOURMINUTES;
+  int get type {
+    return _type;
+  }
+
+  set type(int type) {
+    _type = type;
+  }
+
+  RegExp REG_HOURMINUTES = RegExp(r'^(?:[01]?\d|2[0-3])(?::(?:[0-5]\d?)?)?$');
+  //RegExp(r'^(?:[01]?[0-9]|2[0-3])(?::(?:[0-5]\d?)?)?$');
+  RegExp REG_DECIMAL =
+      RegExp(r'^(?:[01]?[0-9]|2[0-3])(?:[,|.](?:[0-9][0-9]?)?)?$');
+
+  String TEMPLATE_HOURMINUTES = "00:00";
+  String TEMPLATE_DECIMAL = "00,00";
+
+  TimeFormatter(int type) {
+    _type = type;
+  }
+
+  RegExp getRegex() {
+    switch (_type) {
+      case TimeFormatter.TIME_FORMATTER_DECIMAL:
+        return REG_DECIMAL;
+      case TimeFormatter.TIME_FORMATTER_HOURMINUTES:
+        return REG_HOURMINUTES;
+    }
+    return RegExp("");
+  }
+
+  String getTemplate() {
+    switch (_type) {
+      case TimeFormatter.TIME_FORMATTER_DECIMAL:
+        return TEMPLATE_DECIMAL;
+      case TimeFormatter.TIME_FORMATTER_HOURMINUTES:
+        return TEMPLATE_HOURMINUTES;
+    }
+    return "";
+  }
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    //if (newValue.text.isEmpty) {
+    return oldValue; //TextEditingValue(text: "00:00");
+//    }
   }
 }

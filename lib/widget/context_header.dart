@@ -131,7 +131,7 @@ class _ContextHeaderWidget extends State<ContextHeaderWidget> {
   }
 
   Widget getMonthly() {
-    String _monthTitle = "${Utils.instance.MonthName(widget.currentDate)} ";
+    String _monthTitle = "${widget.currentDate.MonthName(context)} ";
     String _yearTitle = "${widget.currentDate.year}";
     return Dismissible(
         key: Key("${_monthTitle}"),

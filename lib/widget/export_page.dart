@@ -147,7 +147,8 @@ class _ExportPageState extends BaseState<ExportPage> {
                         color: Colors.white,
                         width: _width,
                         padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-                        child: Text('Which month you want to export',
+                        child: Text(
+                            AppLocalizations.of(context)!.which_month_export,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
