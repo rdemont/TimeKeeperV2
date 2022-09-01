@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:timekeeperv2/utils/utils.dart';
 
@@ -104,6 +105,9 @@ class TimeSlot extends HiveObject with Comparable {
 class TimeSlotList {
   List<TimeSlot> _items = [];
 
+  DateTime _from = DateTime.now();
+  DateTime _to = DateTime.now();
+
   int get length => _items.length;
 
   TimeSlot? operator [](int index) {
@@ -116,6 +120,55 @@ class TimeSlotList {
       result += element.minutes;
     });
     return result;
+  }
+
+  Future<int> get minutesOverLap {
+    List<bool> weekDayWorking = [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ];
+
+    return Application.instance.minutesPerDay.then((value) {
+      int minutsPerDay = value;
+
+      return Application.instance.workingDayMonday.then((value) {
+        weekDayWorking[DateTime.monday - 1] = value;
+        return Application.instance.workingDayTuesday.then((value) {
+          weekDayWorking[DateTime.tuesday - 1] = value;
+          return Application.instance.workingDayWedesday.then((value) {
+            weekDayWorking[DateTime.wednesday - 1] = value;
+            return Application.instance.workingDayThursday.then((value) {
+              weekDayWorking[DateTime.thursday - 1] = value;
+              return Application.instance.workingDayFriday.then((value) {
+                weekDayWorking[DateTime.friday - 1] = value;
+                return Application.instance.workingDaySaterday.then((value) {
+                  weekDayWorking[DateTime.saturday - 1] = value;
+                  return Application.instance.workingDaySunday.then((value) {
+                    weekDayWorking[DateTime.sunday - 1] = value;
+
+                    int result = 0;
+                    DateTime dt = _from;
+                    while (!dt.isAfter(_to)) {
+                      if (weekDayWorking[dt.weekday - 1]) {
+                        result = result + (minutsPerDay * -1);
+                      }
+                      dt = dt.add(Duration(days: 1));
+                    }
+
+                    return (result + minutes);
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
   }
 
   int minutesForDay(DateTime dt) {
@@ -134,18 +187,23 @@ class TimeSlotList {
     _items.add(timeSlot);
   }
 
+/*
   Future<TimeSlotList> perDateInterval(DateTime fromDt, DateTime toDt) {
+    _from = fromDt;
+    _to = toDt;
     return TimeSlotHelper().perDateInterval(fromDt, toDt);
   }
 
   Future<TimeSlotList> perDate(int year, int month, int day) {
-    return TimeSlotHelper().perDate(year, month, day);
+    return perDateInterval(
+        DateTime(year, month, day), DateTime(year, month, day));
   }
 
   Future<TimeSlotList> perYearMonth(int year, int month) {
-    return TimeSlotHelper().perYearMonth(year, month);
+    return perDateInterval(
+        DateTime(year, month, 1), DateTime(year, month).lastDayOfTheMonth);
   }
-
+*/
   void sortAsc() {
     _items.sort((a, b) => a.compareTo(b));
   }
@@ -215,6 +273,11 @@ class TimeSlotHelper {
 
   Future<TimeSlotList> perDateInterval(DateTime fromDt, DateTime toDt) {
     TimeSlotList result = TimeSlotList();
+    if (toDt.isBefore(fromDt)) {
+      toDt = fromDt;
+    }
+    result._from = fromDt;
+    result._to = toDt;
     //result.removeAll();
     return _box.then((value) {
       _items

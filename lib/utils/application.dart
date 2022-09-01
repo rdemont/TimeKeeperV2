@@ -12,6 +12,7 @@ class Application {
   static const String _LOCALE_COUNTRY = "LOCALE_COUNTRY";
   static const String _WORKING_DAYS = "WORING_DAYS";
   static const String _STEP_PER_HOUR = "_STEP_PER_HOUR";
+  static const String _HOUR_PER_DAY = "_HOUR_PER_DAY";
 
   static const int _MONDAY = 1;
   static const int _TUESDAY = 2;
@@ -159,6 +160,24 @@ class Application {
   Future<int> get stepHour {
     return _prefs.then((value) {
       return (value.getInt(_STEP_PER_HOUR) ?? _DEFAULT_STEP_PER_HOUR);
+    });
+  }
+
+  void setHourPerDay(double hourPerDay) {
+    _prefs.then((value) {
+      value.setDouble(_HOUR_PER_DAY, hourPerDay);
+    });
+  }
+
+  Future<double> get hourPerDay {
+    return _prefs.then((value) {
+      return (value.getDouble(_HOUR_PER_DAY) ?? 0.0);
+    });
+  }
+
+  Future<int> get minutesPerDay {
+    return hourPerDay.then((value) {
+      return (value.toInt() * 60) + ((value - value.toInt()) * 100).toInt();
     });
   }
 }

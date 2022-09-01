@@ -5,6 +5,7 @@
     ,"title_monthly": "Mois"
     ,"title_settings": "Config"
     ,"title_export": "Export"
+    ,"title_edit_add": "Edition"
     ,"menu_settings": "Configuration"
     ,"menu_export": "Export"
     ,"stop_working" : "Arrêt du travail"
@@ -67,5 +68,6 @@
     ,"november_short":"Nov"
     ,"december_short":"Dec"    
     ,"which_month_export":"quel mois vous pouvez exporter"
-    
+    ,"working_time": "Temps de tra."
+    ,"extra_time":"Heures sup."
 }

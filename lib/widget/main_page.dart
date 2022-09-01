@@ -40,6 +40,7 @@ class _MainPageState extends BaseState<MainPage> {
   bool _btnDailyVisible = false;
   bool _btnWeeklyVisible = true;
   bool _btnMonthlyVisible = true;
+  bool _btnAddVisible = true;
 
   DateTime _currentDate = DateTime.now();
   int _viewType = ViewType.VIEW_TYPE_DAILY;
@@ -174,6 +175,27 @@ class _MainPageState extends BaseState<MainPage> {
                       }
                     : null,
                 icon: const Icon(Icons.calendar_view_month_rounded)),
+            IconButton(
+              onPressed: () {
+                TimeSlot ws = TimeSlot.create(
+                    _currentDate,
+                    TimeOfDay(
+                        hour: DateTime.now().hour, minute: DateTime.now().hour),
+                    TimeOfDay(
+                        hour: DateTime.now().add(Duration(hours: 1)).hour,
+                        minute: DateTime.now().minute),
+                    "");
+                Navigator.pushNamed(context, ViewRoute.VIEW_ROUTE_ADD_EDIT,
+                        arguments: ws)
+                    .then((value) {
+                  if (value as bool) {
+                    ws.addInBox().then((value) => ws.save());
+                    changeDate(ws.date);
+                  }
+                });
+              },
+              icon: const Icon(Icons.add_circle_outline_outlined),
+            ),
             PopupMenuButton(
                 // add icon, by default "3 dot" icon
                 // icon: Icon(Icons.book)

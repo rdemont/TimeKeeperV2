@@ -5,12 +5,24 @@ class TitleBox extends StatefulWidget {
     Key? key,
     required this.title,
     required this.child,
-    required this.onClickHelp,
+    this.onClickHelp,
+    this.showHelp = true,
+    this.titleFontSize = 15,
+    this.titleLeft = 30,
+    this.titleTop = 5,
+    this.margin = const EdgeInsets.fromLTRB(10, 20, 10, 0),
+    this.padding = const EdgeInsets.all(10.0),
   }) : super(key: key);
 
   final String title;
   final Widget child;
-  final Function(TimeOfDay) onClickHelp;
+  final Function(TimeOfDay)? onClickHelp;
+  final bool showHelp;
+  final double titleFontSize;
+  final double titleLeft;
+  final double titleTop;
+  final EdgeInsets margin;
+  final EdgeInsets padding;
 
   @override
   State<TitleBox> createState() => _TitleBoxState();
@@ -22,8 +34,8 @@ class _TitleBoxState extends State<TitleBox> {
     return Stack(
       children: [
         Container(
-          margin: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-          padding: const EdgeInsets.all(10.0),
+          margin: widget.margin,
+          padding: widget.padding,
           decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(color: Colors.blueAccent, width: 3),
@@ -41,33 +53,37 @@ class _TitleBoxState extends State<TitleBox> {
                 child: Text(widget.title,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: widget.titleFontSize,
                         color: Colors.black))),
-            left: 30,
-            top: 5),
-        Positioned(
-            child: Container(
-                height: 35,
-                width: 35,
-                alignment: AlignmentDirectional.center,
-                margin: const EdgeInsets.all(0.0),
-                padding: const EdgeInsets.all(0.0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.blueAccent, width: 3),
-                    borderRadius:
-                        const BorderRadius.all(Radius.circular(10.0))),
-                child: IconButton(
-                  iconSize: 25,
-                  padding: const EdgeInsets.all(0.0),
-                  alignment: AlignmentDirectional.center,
-                  icon: Icon(Icons.help, color: Colors.blue, size: 25),
-                  onPressed: () {
-                    widget.onClickHelp;
-                  },
-                )),
-            right: 30,
-            top: 5),
+            left: widget.titleLeft,
+            top: widget.titleTop),
+        Visibility(
+            visible: widget.showHelp,
+            child: Positioned(
+                child: Container(
+                    height: 35,
+                    width: 35,
+                    alignment: AlignmentDirectional.center,
+                    margin: const EdgeInsets.all(0.0),
+                    padding: const EdgeInsets.all(0.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.blueAccent, width: 3),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10.0))),
+                    child: IconButton(
+                      iconSize: 25,
+                      padding: const EdgeInsets.all(0.0),
+                      alignment: AlignmentDirectional.center,
+                      icon: Icon(Icons.help, color: Colors.blue, size: 25),
+                      onPressed: () {
+                        if (widget.onClickHelp != null) {
+                          widget.onClickHelp;
+                        }
+                      },
+                    )),
+                right: 30,
+                top: 5)),
       ],
     );
   }

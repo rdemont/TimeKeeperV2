@@ -6,6 +6,7 @@ import 'package:timekeeperv2/utils/date_extensions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:timekeeperv2/widget/title_box_widget.dart';
 
 import '../business/time_slot.dart';
 import '../utils/application.dart';
@@ -37,11 +38,19 @@ class ContextFooterWidget extends StatefulWidget {
 class _ContextFooterWidget extends State<ContextFooterWidget> {
   _ContextFooterWidget();
 
+  int minutesOverLap = 0;
   bool _isWorking = false;
   @override
   Widget build(BuildContext context) {
     int minutes = widget.timeSlotList.minutes;
 
+    widget.timeSlotList.minutesOverLap.then((value) {
+      if (minutesOverLap != value) {
+        setState(() {
+          minutesOverLap = value;
+        });
+      }
+    });
     Application.instance.isWorking().then((value) {
       if (_isWorking != value) {
         setState(() {
@@ -50,66 +59,71 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
       }
     });
 
+    double _infoBox = 80;
+
     return Row(children: [
       Container(
-        width: (widget.width / 3) - 40,
-        padding: EdgeInsets.fromLTRB(2, 0, 0, 0),
-        child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: minutes > 0
-                ? Container(
-                    padding: EdgeInsets.fromLTRB(10, 5, 5, 0),
-                    alignment: AlignmentDirectional.topStart,
-                    width: (widget.width / 3) - 40,
-                    child: Column(children: [
-                      Container(
-                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          color: Colors.white,
-                          width: (widget.width / 3) - 40,
-                          child: Text(
-                              AppLocalizations.of(context)!.hours_minutes_short,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 10,
-                                  color: Colors.black))),
-                      Container(
-                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          color: Colors.white,
-                          width: (widget.width / 3) - 40,
-                          child: Text(
-                              Utils.instance
-                                  .humainReadableMinutesPerHour(minutes),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Colors.black))),
-                      Container(height: 10),
-                      Container(
-                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          color: Colors.white,
-                          width: (widget.width / 3) - 40,
-                          child: Text(
-                              AppLocalizations.of(context)!.hours_minutes_short,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 10,
-                                  color: Colors.black))),
-                      Container(
-                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                          color: Colors.white,
-                          width: (widget.width / 3) - 40,
-                          child: Text(
-                              Utils.instance
-                                  .humainReadableDecimalPerHour(minutes),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Colors.black)))
-                    ]))
-                : null),
+        width: _infoBox,
+        child: TitleBox(
+            title: AppLocalizations.of(context)!.working_time,
+            showHelp: false,
+            titleFontSize: 10,
+            titleLeft: 5,
+            titleTop: 0,
+            margin: const EdgeInsets.fromLTRB(2, 15, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: SizedBox(
+                width: _infoBox,
+                height: 40,
+                child: Column(
+                  children: [
+                    Text(Utils.instance.humainReadableMinutesPerHour(minutes),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.black)),
+                    Text(Utils.instance.humainReadableDecimalPerHour(minutes),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.black))
+                  ],
+                ))),
       ),
       Container(
-          width: (widget.width / 3) + 40,
+        width: _infoBox,
+        child: TitleBox(
+            title: AppLocalizations.of(context)!.extra_time,
+            showHelp: false,
+            titleFontSize: 10,
+            titleLeft: 5,
+            titleTop: 0,
+            margin: const EdgeInsets.fromLTRB(2, 15, 2, 0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: SizedBox(
+                width: _infoBox,
+                height: 40,
+                child: Column(
+                  children: [
+                    Text(
+                        Utils.instance
+                            .humainReadableMinutesPerHour(minutesOverLap),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.black)),
+                    Text(
+                        Utils.instance
+                            .humainReadableDecimalPerHour(minutesOverLap),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.black))
+                  ],
+                ))),
+      ),
+      Container(
+          width: (widget.width - _infoBox - _infoBox),
           child: Align(
               alignment: AlignmentDirectional.center,
               child: SizedBox(
@@ -144,8 +158,15 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
                               fontWeight: FontWeight.bold,
                               fontSize: 25,
                               color: Colors.white)))))),
-      Container(
-          width: widget.width / 3,
+    ]);
+  }
+}
+
+
+
+/*
+Container(
+          width: ((widget.width - 60 - 60) / 2) - 20,
           child: Align(
               alignment: AlignmentDirectional.center,
               child: SizedBox(
@@ -174,6 +195,4 @@ class _ContextFooterWidget extends State<ContextFooterWidget> {
                             fontSize: 20,
                             color: Colors.white))),
               )))
-    ]);
-  }
-}
+              */

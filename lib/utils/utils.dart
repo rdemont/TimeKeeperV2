@@ -52,13 +52,14 @@ class Utils {
     int hourPerDay = 24;
     int hour = 0;
 
-    int minute = minutes;
+    int minute = minutes.abs();
     if (minute >= 60) {
       hour = minute ~/ 60;
-      minute = minutes - (hour * 60);
+      minute = minutes.abs() - (hour * 60);
     }
-    if (minutes + hour == 0) return "";
-    return ((hour > 0) ? "$hour" : "0") +
+    if (minutes.abs() + hour == 0) return "";
+    return ((minutes < 0) ? "-" : "") +
+        ((hour > 0) ? "$hour" : "0") +
         ".${NumberFormat("0", 2, ((minute / 60) * 100).round())}";
   }
 
@@ -69,13 +70,15 @@ class Utils {
     int hourPerDay = 24;
     int hour = 0;
 
-    int minute = minutes;
+    int minute = minutes.abs();
     if (minute >= 60) {
       hour = minute ~/ 60;
-      minute = minutes - (hour * 60);
+      minute = minutes.abs() - (hour * 60);
     }
-    if (minutes + hour == 0) return "";
-    return ((hour > 0) ? "$hour" : "0") + ":${NumberFormat("0", 2, minute)}";
+    if (minutes.abs() + hour == 0) return "";
+    return ((minutes < 0) ? "-" : "") +
+        ((hour > 0) ? "$hour" : "0") +
+        ":${NumberFormat("0", 2, minute)}";
   }
 
   String humainReadableMinutes(int? minutes) {

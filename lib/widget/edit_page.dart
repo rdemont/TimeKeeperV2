@@ -166,6 +166,7 @@ class _EditPageState extends BaseState<EditPage> {
     Key keyTo = UniqueKey();
     initScreenSize();
     initParameter();
+    _title = AppLocalizations.of(context)!.title_edit_add;
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: _screenToolsBar,

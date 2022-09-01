@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
+
 import 'package:timekeeperv2/utils/application.dart';
 import 'package:timekeeperv2/widget/base_page.dart';
 
@@ -112,6 +112,14 @@ class _ConfigPageState extends BaseState<ConfigPage> {
       }
     });
 
+    Application.instance.hourPerDay.then((value) {
+      if (value != _hourPerDay) {
+        setState(() {
+          _hourPerDay = value;
+        });
+      }
+    });
+
     Application.instance.workingDayMonday.then((value) {
       if (_isMonday != value) {
         setState(() {
@@ -161,6 +169,22 @@ class _ConfigPageState extends BaseState<ConfigPage> {
         });
       }
     });
+  }
+
+  double _hourPerDay = 0.0;
+  setHourPerDay(String value) {
+    //double result = 0.0;
+    if (timeFormater.type == TimeFormatter.TIME_FORMATTER_HOURMINUTES) {
+      int hour = int.tryParse(value.substring(0, value.indexOf(":"))) ?? 0;
+      int minutes = int.tryParse(value.substring(value.indexOf(":") + 1)) ?? 0;
+
+      _hourPerDay = double.tryParse(hour.toString() + ".0") ?? 0.0;
+      _hourPerDay += (minutes / 60);
+      _hourPerDay = ((_hourPerDay * 100).toInt() / 100);
+    } else {
+      _hourPerDay = double.tryParse(value.replaceAll(",", ".")) ?? 0.0;
+    }
+    Application.instance.setHourPerDay(_hourPerDay);
   }
 
   TimeFormatter timeFormater =
@@ -307,6 +331,12 @@ class _ConfigPageState extends BaseState<ConfigPage> {
                         child: Row(children: [
                       Expanded(
                           child: TextField(
+                              controller: TextEditingController()
+                                ..text =
+                                    timeFormater.getStringValue(_hourPerDay),
+                              onSubmitted: (value) {
+                                setHourPerDay(value as String);
+                              },
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.datetime,
                               decoration: InputDecoration(
@@ -341,69 +371,75 @@ class _ConfigPageState extends BaseState<ConfigPage> {
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      width: _screenWidth,
-                      color: Colors.white,
-                      child: Center(
-                          child: DropdownButton(
-                        icon: Icon(Icons.view_timeline_rounded),
-                        items: const [
-                          DropdownMenuItem(
-                            value: 1,
-                            child: Text('1 Minutes'),
-                          ),
-                          DropdownMenuItem(
-                            value: 5,
-                            child: Text("5 Minutes"),
-                          ),
-                          DropdownMenuItem(
-                            value: 10,
-                            child: Text("10 Minutes"),
-                          ),
-                          DropdownMenuItem(
-                            value: 15,
-                            child: Text("15 Minutes"),
-                          ),
-                          DropdownMenuItem(
-                            value: 30,
-                            child: Text("30 Minutes"),
-                          ),
-                          DropdownMenuItem(
-                            value: 60,
-                            child: Text("1 heure"),
-                          ),
-                        ],
-                        onChanged: (v) {
-                          setStepHour(v as int);
-                        },
-                        value: _stepHour,
-                      ))),
+                  TitleBox(
+                      title: "Time step",
+                      onClickHelp: (p0) {},
+                      child: Container(
+                          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                          width: _screenWidth,
+                          color: Colors.white,
+                          child: Center(
+                              child: DropdownButton(
+                            icon: Icon(Icons.view_timeline_rounded),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 1,
+                                child: Text('1 Minutes'),
+                              ),
+                              DropdownMenuItem(
+                                value: 5,
+                                child: Text("5 Minutes"),
+                              ),
+                              DropdownMenuItem(
+                                value: 10,
+                                child: Text("10 Minutes"),
+                              ),
+                              DropdownMenuItem(
+                                value: 15,
+                                child: Text("15 Minutes"),
+                              ),
+                              DropdownMenuItem(
+                                value: 30,
+                                child: Text("30 Minutes"),
+                              ),
+                              DropdownMenuItem(
+                                value: 60,
+                                child: Text("1 heure"),
+                              ),
+                            ],
+                            onChanged: (v) {
+                              setStepHour(v as int);
+                            },
+                            value: _stepHour,
+                          )))),
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      width: _screenWidth,
-                      color: Colors.white,
-                      child: Center(
-                          child: DropdownButton(
-                        icon: Icon(Icons.language),
-                        items: const [
-                          DropdownMenuItem(
-                            value: Locale('en'),
-                            child: Text('English'),
-                          ),
-                          DropdownMenuItem(
-                            value: Locale('fr'),
-                            child: Text("Français"),
-                          ),
-                        ],
-                        onChanged: (v) => setState(() {
-                          setLocale(v as Locale);
-                        }),
-                        value: getLocale(),
-                      ))),
+                  TitleBox(
+                      title: "Language",
+                      onClickHelp: (p0) {},
+                      child: Container(
+                          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                          width: _screenWidth,
+                          color: Colors.white,
+                          child: Center(
+                              child: DropdownButton(
+                            icon: Icon(Icons.language),
+                            items: const [
+                              DropdownMenuItem(
+                                value: Locale('en'),
+                                child: Text('English'),
+                              ),
+                              DropdownMenuItem(
+                                value: Locale('fr'),
+                                child: Text("Français"),
+                              ),
+                            ],
+                            onChanged: (v) => setState(() {
+                              setLocale(v as Locale);
+                            }),
+                            value: getLocale(),
+                          )))),
                 ])),
             Container(
                 height: _screenContextFooter,
@@ -456,6 +492,20 @@ class TimeFormatter extends TextInputFormatter {
         return TEMPLATE_DECIMAL;
       case TimeFormatter.TIME_FORMATTER_HOURMINUTES:
         return TEMPLATE_HOURMINUTES;
+    }
+    return "";
+  }
+
+  String getStringValue(double value) {
+    String result;
+    switch (_type) {
+      case TimeFormatter.TIME_FORMATTER_DECIMAL:
+        return value.toStringAsFixed(2);
+      case TimeFormatter.TIME_FORMATTER_HOURMINUTES:
+        return Utils.instance.NumberFormat("0", 2, value.toInt()) +
+            ":" +
+            Utils.instance
+                .NumberFormat("0", 2, ((value - value.toInt()) * 60).toInt());
     }
     return "";
   }

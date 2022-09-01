@@ -112,7 +112,7 @@ class _ExportPageState extends BaseState<ExportPage> {
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
   }
 
-  late TimeSlotList _timeSlotList;
+  TimeSlotList _timeSlotList = TimeSlotHelper().emptyList;
   void changeDate(DateTime dt) async {
     TimeSlotHelper().perYearMonth(dt.year, dt.month).then((value) {
       setState(() {

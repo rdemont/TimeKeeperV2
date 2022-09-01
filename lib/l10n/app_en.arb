@@ -4,6 +4,7 @@
     ,"title_monthly": "Monthly"
     ,"title_settings": "Settings"
     ,"title_export": "Export"
+    ,"title_edit_add": "Edit"
     ,"menu_settings": "Settings"
     ,"menu_export": "Export"
     ,"stop_working" : "Stop Working"
@@ -66,4 +67,6 @@
     ,"november_short":"Nov"
     ,"december_short":"Dec"
     ,"which_month_export":"Which month you want to export"
+    ,"working_time": "Working time"
+    ,"extra_time":"extra time"
 }
